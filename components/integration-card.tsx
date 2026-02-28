@@ -4,7 +4,12 @@ import { StatusChip } from "@/components/status-chip";
 import { Zap, RefreshCw, Settings } from "lucide-react";
 import type { Integration } from "@/lib/types/models";
 
-export function IntegrationCard({ integration }: { integration: Integration }) {
+interface IntegrationCardProps {
+  integration: Integration;
+  onConnect?: () => void;
+}
+
+export function IntegrationCard({ integration, onConnect }: IntegrationCardProps) {
   return (
     <Card className="p-5 hover:shadow-md transition-shadow">
       <div className="flex items-start gap-3">
@@ -39,6 +44,11 @@ export function IntegrationCard({ integration }: { integration: Integration }) {
           <Settings className="h-3 w-3" />
           Configure
         </Button>
+        {integration.status !== "connected" && onConnect && (
+          <Button size="sm" className="h-7 text-xs gap-1" onClick={onConnect}>
+            Connect
+          </Button>
+        )}
       </div>
     </Card>
   );

@@ -3,8 +3,7 @@ import { TopBar } from "@/components/top-bar";
 import { KpiCard } from "@/components/kpi-card";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { AttributionChart } from "./chart";
-import { FunnelSection } from "./funnel";
+import { AttributionClient } from "./client";
 
 export default async function AttributionPage() {
   const [kpis, chartData, funnelData] = await Promise.all([
@@ -31,9 +30,7 @@ export default async function AttributionPage() {
             <KpiCard key={kpi.label} metric={kpi} />
           ))}
         </div>
-
-        <AttributionChart data={chartData} />
-        <FunnelSection data={funnelData} />
+        <AttributionClient chartData={chartData} funnelData={funnelData} />
       </div>
     </>
   );

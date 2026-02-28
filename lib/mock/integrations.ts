@@ -9,7 +9,7 @@ export const integrationKpis: KpiMetric[] = [
 
 export const integrations: Integration[] = [
   {
-    id: "1",
+    id: "int-001",
     name: "Salesforce",
     avatar: "SF",
     avatarColor: "bg-blue-500",
@@ -19,9 +19,10 @@ export const integrations: Integration[] = [
     description: "Bi-directional sync for accounts, contacts, opportunities, and activities.",
     lastSync: "2 min ago",
     recordCount: "24.2K",
+    objectsSynced: ["Accounts", "Contacts", "Opportunities", "Activities"],
   },
   {
-    id: "2",
+    id: "int-002",
     name: "HubSpot",
     avatar: "HS",
     avatarColor: "bg-orange-500",
@@ -31,9 +32,10 @@ export const integrations: Integration[] = [
     description: "Marketing automation sync including campaigns, forms, and lead scoring.",
     lastSync: "5 min ago",
     recordCount: "12.8K",
+    objectsSynced: ["Campaigns", "Forms", "Leads", "Scores"],
   },
   {
-    id: "3",
+    id: "int-003",
     name: "Outreach",
     avatar: "OR",
     avatarColor: "bg-purple-500",
@@ -43,9 +45,10 @@ export const integrations: Integration[] = [
     description: "Sequence enrollment, email tracking, and meeting scheduling sync.",
     lastSync: "8 min ago",
     recordCount: "8.1K",
+    objectsSynced: ["Sequences", "Emails", "Meetings"],
   },
   {
-    id: "4",
+    id: "int-004",
     name: "LinkedIn Sales Nav",
     avatar: "LI",
     avatarColor: "bg-blue-700",
@@ -55,5 +58,6 @@ export const integrations: Integration[] = [
     description: "InMail tracking, profile views, and connection request monitoring.",
     lastSync: "15 min ago",
     recordCount: "3.3K",
+    objectsSynced: ["InMails", "ProfileViews", "Connections"],
   },
 ];

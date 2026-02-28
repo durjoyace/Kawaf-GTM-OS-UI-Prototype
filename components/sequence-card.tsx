@@ -18,7 +18,7 @@ export function SequenceCard({ sequence }: { sequence: Sequence }) {
         </div>
         <StatusChip label={sequence.status === "active" ? "Active" : sequence.status === "paused" ? "Paused" : "Draft"} />
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-4 text-center">
+      <div className="mt-4 grid grid-cols-5 gap-2 text-center">
         <div>
           <p className="text-lg font-bold">{sequence.enrolled.toLocaleString()}</p>
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Enrolled</p>
@@ -29,7 +29,15 @@ export function SequenceCard({ sequence }: { sequence: Sequence }) {
         </div>
         <div>
           <p className="text-lg font-bold">{sequence.openRate}%</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Open Rate</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Open</p>
+        </div>
+        <div>
+          <p className="text-lg font-bold">{sequence.replyRate}%</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Reply</p>
+        </div>
+        <div>
+          <p className="text-lg font-bold">{sequence.meetingsBooked}</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Meetings</p>
         </div>
       </div>
       <div className="mt-4">

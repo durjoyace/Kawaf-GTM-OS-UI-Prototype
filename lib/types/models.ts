@@ -6,6 +6,8 @@ export type ConfidenceLevel = "high" | "medium" | "low";
 
 export type IntegrationStatus = "connected" | "disconnected" | "error" | "pending";
 
+export type AttributionModel = "last-touch" | "linear" | "time-decay";
+
 export interface KpiMetric {
   label: string;
   value: string;
@@ -29,6 +31,8 @@ export interface Signal {
   tags: string[];
   recency: string;
   impact: "high" | "medium" | "low";
+  explanation?: string;
+  suggestedAction?: string;
 }
 
 export interface SignalCategoryCount {
@@ -36,6 +40,15 @@ export interface SignalCategoryCount {
   label: string;
   count: number;
   icon: string;
+}
+
+export interface SignalFilter {
+  category?: SignalCategory;
+  minConfidence?: number;
+  maxConfidence?: number;
+  impact?: "high" | "medium" | "low";
+  search?: string;
+  sortBy?: "recency" | "confidence" | "impact";
 }
 
 export interface Account {
@@ -54,6 +67,8 @@ export interface Sequence {
   enrolled: number;
   steps: number;
   openRate: number;
+  replyRate: number;
+  meetingsBooked: number;
   status: "active" | "paused" | "draft";
   progress: number;
 }
@@ -84,6 +99,7 @@ export interface Integration {
   description: string;
   lastSync: string;
   recordCount: string;
+  objectsSynced?: string[];
 }
 
 export interface WorkflowNode {
@@ -92,6 +108,16 @@ export interface WorkflowNode {
   icon: string;
   category: "trigger" | "action" | "logic" | "utility" | "end";
   color: string;
+  description?: string;
+}
+
+export interface WorkflowNodeData {
+  label: string;
+  icon: string;
+  category: "trigger" | "action" | "logic" | "utility" | "end";
+  color: string;
+  config?: Record<string, string>;
+  [key: string]: unknown;
 }
 
 export interface ChartDataPoint {
@@ -100,9 +126,19 @@ export interface ChartDataPoint {
   closed?: number;
   signal?: number;
   direct?: number;
+  [key: string]: string | number | undefined;
 }
 
 export interface DashboardData {
   kpis: KpiMetric[];
   chartData: ChartDataPoint[];
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  read: boolean;
+  type: "signal" | "sequence" | "integration" | "system";
 }

@@ -10,7 +10,7 @@ export const signalCategories: SignalCategoryCount[] = [
 
 export const signals: Signal[] = [
   {
-    id: "1",
+    id: "sig-001",
     accountName: "Acme Corp",
     accountAvatar: "AC",
     signalType: "Product Usage Spike",
@@ -21,9 +21,11 @@ export const signals: Signal[] = [
     tags: ["Expansion", "Product-Led"],
     recency: "2 hours ago",
     impact: "high",
+    explanation: "This signal is triggered when API usage exceeds 200% of the 30-day average. Acme Corp's usage pattern correlates with expansion behavior seen in 78% of similar accounts that upgraded within 30 days.",
+    suggestedAction: "Schedule a call with the VP Engineering to discuss enterprise tier upgrade and additional seat licenses.",
   },
   {
-    id: "2",
+    id: "sig-002",
     accountName: "TechFlow Inc.",
     accountAvatar: "TF",
     signalType: "Funding Round",
@@ -34,9 +36,11 @@ export const signals: Signal[] = [
     tags: ["New Business", "Enterprise"],
     recency: "5 hours ago",
     impact: "high",
+    explanation: "Funding events are detected via Crunchbase and SEC filings. Companies raising Series B+ have a 3.2x higher conversion rate within 60 days of announcement.",
+    suggestedAction: "Initiate outbound sequence targeting CTO and VP Engineering with a personalized value proposition.",
   },
   {
-    id: "3",
+    id: "sig-003",
     accountName: "DataBridge Co.",
     accountAvatar: "DB",
     signalType: "Contract Renewal",
@@ -47,9 +51,11 @@ export const signals: Signal[] = [
     tags: ["Retention", "At-Risk"],
     recency: "1 day ago",
     impact: "medium",
+    explanation: "Contract renewal signals combine CRM close dates with usage trends. Declining usage (-15%) paired with upcoming renewal indicates churn risk. Similar patterns show 40% churn probability.",
+    suggestedAction: "Trigger churn prevention sequence. Schedule a QBR with the customer success team and key stakeholders.",
   },
   {
-    id: "4",
+    id: "sig-004",
     accountName: "Nexus Systems",
     accountAvatar: "NS",
     signalType: "Competitor Evaluation",
@@ -60,9 +66,11 @@ export const signals: Signal[] = [
     tags: ["Competitive", "Urgent"],
     recency: "3 hours ago",
     impact: "high",
+    explanation: "Web analytics detected repeated visits to comparison and pricing pages, combined with content downloads. This behavior pattern precedes competitor switch in 62% of cases.",
+    suggestedAction: "Send competitive battle card to AE. Escalate to sales leadership for executive engagement.",
   },
   {
-    id: "5",
+    id: "sig-005",
     accountName: "CloudScale AI",
     accountAvatar: "CA",
     signalType: "Hiring Signal",
@@ -73,9 +81,11 @@ export const signals: Signal[] = [
     tags: ["Growth", "Mid-Market"],
     recency: "2 days ago",
     impact: "medium",
+    explanation: "Job posting signals are aggregated from LinkedIn and company career pages. 5+ engineering hires correlate with tool evaluation cycles in 45% of mid-market companies.",
+    suggestedAction: "Add to mid-market outbound sequence with team-scaling messaging angle.",
   },
   {
-    id: "6",
+    id: "sig-006",
     accountName: "FinServ Global",
     accountAvatar: "FG",
     signalType: "Webinar Attendance",
@@ -86,5 +96,7 @@ export const signals: Signal[] = [
     tags: ["Awareness", "Enterprise"],
     recency: "4 days ago",
     impact: "low",
+    explanation: "Multi-stakeholder webinar attendance is a top-of-funnel signal. While confidence is lower, having 3 attendees from the same account indicates organizational interest.",
+    suggestedAction: "Send follow-up content sequence with security-focused case studies.",
   },
 ];
