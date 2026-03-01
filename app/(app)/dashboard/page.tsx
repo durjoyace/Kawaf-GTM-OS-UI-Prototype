@@ -3,6 +3,8 @@ import { TopBar } from "@/components/top-bar";
 import { KpiCard } from "@/components/kpi-card";
 import { DashboardChart } from "./chart";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const data = await getDashboardData();
 

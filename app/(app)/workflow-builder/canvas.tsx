@@ -73,6 +73,8 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node<WorkflowNodeData> | null>(null);
   const [published, setPublished] = useState(false);
+  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -125,15 +127,47 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
     toast.info("Node deleted");
   }
 
-  function handleSave() {
-    toast.success("Draft saved", { description: `${nodes.length} nodes, ${edges.length} connections` });
+  async function handleSave() {
+    setSaving(true);
+    try {
+      const payload = { name: "My Workflow", nodes, edges };
+      if (workflowId) {
+        await fetch(`/api/workflows/${workflowId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        const res = await fetch("/api/workflows", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        setWorkflowId(data.id);
+      }
+      toast.success("Draft saved", { description: `${nodes.length} nodes, ${edges.length} connections` });
+    } catch {
+      toast.error("Failed to save workflow");
+    } finally {
+      setSaving(false);
+    }
   }
 
-  function handlePublish() {
-    setPublished(true);
-    toast.success("Workflow published!", {
-      description: "Your workflow is now live and processing signals.",
-    });
+  async function handlePublish() {
+    if (!workflowId) {
+      await handleSave();
+    }
+    if (!workflowId) return;
+    try {
+      await fetch(`/api/workflows/${workflowId}/publish`, { method: "POST" });
+      setPublished(true);
+      toast.success("Workflow published!", {
+        description: "Your workflow is now live and processing signals.",
+      });
+    } catch {
+      toast.error("Failed to publish workflow");
+    }
   }
 
   return (

@@ -2,6 +2,8 @@ import { getWorkflowNodes } from "@/lib/data/api";
 import { TopBar } from "@/components/top-bar";
 import { WorkflowCanvas } from "./canvas";
 
+export const dynamic = "force-dynamic";
+
 export default async function WorkflowBuilderPage() {
   const nodes = await getWorkflowNodes();
 

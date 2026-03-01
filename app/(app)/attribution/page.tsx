@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { AttributionClient } from "./client";
 
+export const dynamic = "force-dynamic";
+
 export default async function AttributionPage() {
   const [kpis, chartData, funnelData] = await Promise.all([
     getAttributionKpis(),

@@ -4,6 +4,8 @@ import { AccountRow } from "@/components/account-row";
 import { Card } from "@/components/ui/card";
 import { Sparkles, TrendingUp, Zap, Target } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AIPersonalizationPage() {
   const [accounts, signals] = await Promise.all([getAccounts(), getSignals()]);
   const latestSignal = signals[0];

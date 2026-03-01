@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import { LogOut, Settings, User, CreditCard } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,7 +37,7 @@ export function UserMenu() {
           <Settings className="h-3.5 w-3.5" /> Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-xs gap-2 cursor-pointer text-red-600 focus:text-red-600">
+        <DropdownMenuItem className="text-xs gap-2 cursor-pointer text-red-600 focus:text-red-600" onClick={() => signOut({ callbackUrl: "/login" })}>
           <LogOut className="h-3.5 w-3.5" /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

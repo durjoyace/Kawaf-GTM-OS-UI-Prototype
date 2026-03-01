@@ -7,8 +7,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import type { Notification } from "@/lib/types/models";
-import { getNotifications } from "@/lib/data/api";
 
 const typeIcons: Record<string, React.ElementType> = {
   signal: Radar,
@@ -17,12 +17,42 @@ const typeIcons: Record<string, React.ElementType> = {
   system: Settings,
 };
 
+function timeAgo(date: string | Date): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const seconds = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+}
+
 export function NotificationDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    getNotifications().then(setNotifications);
+    fetch("/api/notifications")
+      .then((r) => r.json())
+      .then((rows) =>
+        setNotifications(
+          rows.map((n: { id: string; title: string; description: string; created_at: string; read: boolean; type: string }) => ({
+            id: n.id,
+            title: n.title,
+            description: n.description ?? "",
+            time: timeAgo(n.created_at ?? new Date()),
+            read: n.read ?? false,
+            type: n.type,
+          }))
+        )
+      );
   }, []);
+
+  async function markAllRead() {
+    await fetch("/api/notifications/mark-all-read", { method: "POST" });
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  }
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -39,9 +69,16 @@ export function NotificationDropdown() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 p-0">
-        <div className="border-b px-4 py-2.5">
-          <p className="text-sm font-semibold">Notifications</p>
-          <p className="text-[10px] text-muted-foreground">{unreadCount} unread</p>
+        <div className="border-b px-4 py-2.5 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold">Notifications</p>
+            <p className="text-[10px] text-muted-foreground">{unreadCount} unread</p>
+          </div>
+          {unreadCount > 0 && (
+            <Button variant="ghost" size="sm" className="h-6 text-[10px] text-muted-foreground" onClick={markAllRead}>
+              Mark all read
+            </Button>
+          )}
         </div>
         <div className="max-h-[320px] overflow-y-auto divide-y">
           {notifications.map((n) => {

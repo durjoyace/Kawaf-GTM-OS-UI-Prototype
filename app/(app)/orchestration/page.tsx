@@ -4,6 +4,8 @@ import { KpiCard } from "@/components/kpi-card";
 import { SequenceCard } from "@/components/sequence-card";
 import { Plus } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function OrchestrationPage() {
   const [sequences, kpis] = await Promise.all([getSequences(), getOrchestrationKpis()]);
 

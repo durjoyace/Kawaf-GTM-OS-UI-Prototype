@@ -33,13 +33,24 @@ export function IntegrationsClient({ integrations, kpis }: Props) {
   }
 
   async function confirmConnect() {
+    if (!connectModal) return;
     setConnecting(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setConnecting(false);
-    setConnectModal(null);
-    toast.success(`${connectModal?.name} connected successfully`, {
-      description: "Initial sync will begin in a few moments.",
-    });
+    try {
+      const provider = connectModal.name.toLowerCase().replace(/\s+/g, "-");
+      await fetch(`/api/integrations/${provider}/connect`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: connectModal.name, config: {} }),
+      });
+      toast.success(`${connectModal.name} connected successfully`, {
+        description: "Initial sync will begin in a few moments.",
+      });
+    } catch {
+      toast.error("Failed to connect integration");
+    } finally {
+      setConnecting(false);
+      setConnectModal(null);
+    }
   }
 
   return (
