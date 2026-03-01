@@ -45,10 +45,10 @@ export function SocialMentionCard({
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-medium">{author}</span>
             <div className="flex items-center gap-1.5">
-              <Badge className={`text-[10px] ${sentimentColors[sentiment] ?? sentimentColors.neutral}`}>
+              <Badge className={`text-[11px] ${sentimentColors[sentiment] ?? sentimentColors.neutral}`}>
                 {sentiment}
               </Badge>
-              <span className="text-[10px] text-muted-foreground">{relevance}%</span>
+              <span className="text-[11px] text-muted-foreground">{relevance}%</span>
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{content}</p>
@@ -56,7 +56,7 @@ export function SocialMentionCard({
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[10px] text-blue-600 hover:text-blue-700 mt-2"
+            className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-700 mt-2"
           >
             View original <ExternalLink className="h-2.5 w-2.5" />
           </a>

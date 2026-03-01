@@ -46,7 +46,7 @@ export function NodeInspector({ node, onClose, onUpdate, onDelete }: NodeInspect
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div>
           <p className="text-sm font-semibold">{data.label}</p>
-          <p className="text-[10px] text-muted-foreground capitalize">{data.category} node</p>
+          <p className="text-[11px] text-muted-foreground capitalize">{data.category} node</p>
         </div>
         <button onClick={onClose} className="rounded-md p-1 hover:bg-gray-100 transition-colors">
           <X className="h-4 w-4" />
@@ -54,7 +54,7 @@ export function NodeInspector({ node, onClose, onUpdate, onDelete }: NodeInspect
       </div>
       <div className="flex-1 overflow-auto p-4 space-y-4">
         <div>
-          <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             Node Label
           </label>
           <Input
@@ -64,12 +64,12 @@ export function NodeInspector({ node, onClose, onUpdate, onDelete }: NodeInspect
           />
         </div>
         <Separator />
-        <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
           Configuration
         </p>
         {fields.map((field) => (
           <div key={field.label}>
-            <label className="text-[10px] font-medium text-muted-foreground">{field.label}</label>
+            <label className="text-[11px] font-medium text-muted-foreground">{field.label}</label>
             <Input
               placeholder={field.placeholder}
               value={data.config?.[field.label] || ""}

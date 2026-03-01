@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/top-bar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ReportBuilder } from "@/components/report-builder";
-import { Plus, FileBarChart, Share2, ExternalLink } from "lucide-react";
+import { EmptyState } from "@/components/empty-state";
+import { KpiGridSkeleton } from "@/components/loading-skeleton";
+import { Plus, FileBarChart, Share2 } from "lucide-react";
 
 interface Report {
   id: string;
@@ -71,12 +74,11 @@ export default function ReportsPage() {
           <Card className="p-6 space-y-4">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">Report Name</label>
-              <input
+              <Input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Q1 2026 GTM Performance"
-                className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
             <ReportBuilder widgets={widgets} onChange={setWidgets} />
@@ -90,10 +92,8 @@ export default function ReportsPage() {
         )}
 
         {loading ? (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500" />
-          </div>
-        ) : (
+          <KpiGridSkeleton count={3} />
+        ) : reports.length > 0 ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {reports.map((report) => (
               <Card
@@ -111,19 +111,19 @@ export default function ReportsPage() {
                 <p className="text-xs text-muted-foreground mt-2">
                   {report.widgets?.length ?? 0} widgets
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-[11px] text-muted-foreground mt-1">
                   Created {new Date(report.createdAt).toLocaleDateString()}
                 </p>
               </Card>
             ))}
-
-            {reports.length === 0 && !creating && (
-              <p className="text-sm text-muted-foreground col-span-full text-center py-10">
-                No reports yet. Create your first report to share with stakeholders.
-              </p>
-            )}
           </div>
-        )}
+        ) : !creating ? (
+          <EmptyState
+            icon={<FileBarChart className="h-6 w-6 text-muted-foreground" />}
+            title="No reports yet"
+            description="Create your first report to share ROI insights with stakeholders."
+          />
+        ) : null}
       </div>
     </>
   );

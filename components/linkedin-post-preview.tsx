@@ -18,7 +18,7 @@ export function LinkedInPostPreview({ headline, content, hashtags }: LinkedInPos
         </div>
         <div>
           <p className="text-xs font-semibold text-slate-900">You</p>
-          <p className="text-[10px] text-slate-500">Just now</p>
+          <p className="text-[11px] text-slate-500">Just now</p>
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export function LinkedInPostPreview({ headline, content, hashtags }: LinkedInPos
       </div>
 
       {/* LinkedIn-style footer */}
-      <div className="border-t border-slate-100 px-3 py-2 flex items-center gap-4 text-[10px] text-slate-400">
+      <div className="border-t border-slate-100 px-3 py-2 flex items-center gap-4 text-[11px] text-slate-400">
         <span>Like</span>
         <span>Comment</span>
         <span>Repost</span>

@@ -21,7 +21,7 @@ export function SignalSourceCard() {
             <div key={source.id} className="flex items-center gap-3">
               <source.icon className={`h-4 w-4 ${source.color}`} />
               <span className="flex-1 text-sm">{source.name}</span>
-              <Badge variant="secondary" className="text-[10px]">
+              <Badge variant="secondary" className="text-[11px]">
                 {source.status}
               </Badge>
             </div>

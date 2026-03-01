@@ -175,7 +175,7 @@ export function SignalBuilderClient({ sources: initialSources }: { sources: Sign
             </div>
             <div className="flex items-center gap-2">
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
                   source.status === "active"
                     ? "bg-green-100 text-green-700"
                     : "bg-slate-100 text-slate-600"

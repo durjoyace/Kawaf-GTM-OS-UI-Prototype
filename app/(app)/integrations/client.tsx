@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { ShieldCheck, Loader2 } from "lucide-react";
+import { ShieldCheck, Loader2, ExternalLink, Check } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -61,7 +62,7 @@ export function IntegrationsClient({ integrations, kpis }: Props) {
           <div key={kpi.label} className="relative">
             <KpiCard metric={kpi} />
             {kpi.label === "Data Region" && (
-              <Badge className="absolute top-3 right-3 bg-green-100 text-green-700 text-[10px] gap-0.5">
+              <Badge className="absolute top-3 right-3 bg-green-100 text-green-700 text-[11px] gap-0.5">
                 <ShieldCheck className="h-2.5 w-2.5" />
                 SOC2
               </Badge>
@@ -76,7 +77,7 @@ export function IntegrationsClient({ integrations, kpis }: Props) {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
               activeTab === tab
                 ? "bg-slate-800 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -95,7 +96,7 @@ export function IntegrationsClient({ integrations, kpis }: Props) {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`rounded-md px-2.5 py-1 text-[10px] font-medium transition-colors ${
+                className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                   activeCategory === cat
                     ? "bg-blue-50 text-blue-700 border border-blue-200"
                     : "bg-gray-50 text-gray-600 hover:bg-gray-100 border border-transparent"
@@ -116,29 +117,73 @@ export function IntegrationsClient({ integrations, kpis }: Props) {
       )}
 
       {activeTab === "Open API" && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-sm font-medium">API Documentation</p>
-          <p className="text-xs text-muted-foreground mt-1">RESTful API with OAuth 2.0 authentication. Rate limited to 10,000 requests/day.</p>
-          <pre className="mt-4 rounded-lg bg-slate-900 text-green-400 text-xs p-4 text-left max-w-md w-full">
-{`GET /api/v1/signals
-Authorization: Bearer <token>
+        <div className="space-y-4 max-w-2xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">API Documentation</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">RESTful API with OAuth 2.0 authentication. Rate limited to 10,000 requests/day.</p>
+            </div>
+            <Button size="sm" variant="outline" className="text-xs gap-1" asChild>
+              <a href="/developers">
+                <ExternalLink className="h-3 w-3" />
+                Full Docs
+              </a>
+            </Button>
+          </div>
+          <Card className="overflow-hidden">
+            <div className="bg-slate-800 px-4 py-2 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-slate-400">GET /api/v1/signals</span>
+              <Badge variant="secondary" className="text-[11px] bg-green-500/20 text-green-400 border-0">200 OK</Badge>
+            </div>
+            <pre className="bg-slate-900 text-green-400 text-xs p-4 overflow-x-auto">
+{`curl -X GET https://api.kawaf.io/v1/signals \\
+  -H "Authorization: Bearer <token>" \\
+  -H "Content-Type: application/json"
 
 {
-  "data": [...],
-  "meta": { "total": 247 }
+  "data": [
+    {
+      "id": "sig_01",
+      "account": "Acme Corp",
+      "type": "product-analytics",
+      "confidence": 0.92
+    }
+  ],
+  "meta": { "total": 247, "page": 1 }
 }`}
-          </pre>
+            </pre>
+          </Card>
         </div>
       )}
 
       {activeTab === "Security" && (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <ShieldCheck className="h-12 w-12 text-green-500 mb-4" />
-          <p className="text-sm font-medium">SOC 2 Type II Compliant</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-            All data is encrypted at rest (AES-256) and in transit (TLS 1.3).
-            Data residency: US-East. Annual penetration testing by independent auditors.
-          </p>
+        <div className="space-y-4 max-w-lg">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-8 w-8 text-green-500" />
+            <div>
+              <h3 className="text-sm font-semibold">Security & Compliance</h3>
+              <p className="text-xs text-muted-foreground">Enterprise-grade security for your GTM data.</p>
+            </div>
+          </div>
+          <Card className="p-4 space-y-3">
+            {[
+              { label: "SOC 2 Type II Certified", done: true },
+              { label: "AES-256 encryption at rest", done: true },
+              { label: "TLS 1.3 encryption in transit", done: true },
+              { label: "Data residency: US-East", done: true },
+              { label: "Annual penetration testing", done: true },
+              { label: "GDPR compliant data handling", done: true },
+              { label: "SSO / SAML 2.0 support", done: true },
+              { label: "Role-based access controls", done: true },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2.5">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100">
+                  <Check className="h-3 w-3 text-green-600" />
+                </div>
+                <span className="text-xs font-medium">{item.label}</span>
+              </div>
+            ))}
+          </Card>
         </div>
       )}
 
@@ -163,7 +208,7 @@ Authorization: Bearer <token>
                 <p className="text-xs font-medium mb-2">Objects to sync:</p>
                 <div className="flex gap-1.5 flex-wrap">
                   {connectModal.objectsSynced.map((obj) => (
-                    <Badge key={obj} variant="secondary" className="text-[10px]">{obj}</Badge>
+                    <Badge key={obj} variant="secondary" className="text-[11px]">{obj}</Badge>
                   ))}
                 </div>
               </div>

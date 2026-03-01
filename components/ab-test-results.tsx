@@ -26,19 +26,21 @@ interface AbStepResult {
 
 interface AbTestResultsProps {
   sequenceId: string;
+  data?: AbStepResult[];
 }
 
-export function AbTestResults({ sequenceId }: AbTestResultsProps) {
-  const [results, setResults] = useState<AbStepResult[]>([]);
-  const [loading, setLoading] = useState(true);
+export function AbTestResults({ sequenceId, data }: AbTestResultsProps) {
+  const [results, setResults] = useState<AbStepResult[]>(data ?? []);
+  const [loading, setLoading] = useState(!data);
 
   useEffect(() => {
+    if (data) return;
     fetch(`/api/sequences/${sequenceId}/ab-results`)
       .then((r) => r.json())
       .then((d) => setResults(d.abResults ?? []))
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [sequenceId]);
+  }, [sequenceId, data]);
 
   if (loading) {
     return (
@@ -64,7 +66,7 @@ export function AbTestResults({ sequenceId }: AbTestResultsProps) {
               Step {result.stepIndex + 1} ({result.stepType})
             </span>
             {result.winner && (
-              <Badge variant="outline" className="text-[10px] gap-1 border-amber-200 text-amber-700">
+              <Badge variant="outline" className="text-[11px] gap-1 border-amber-200 text-amber-700">
                 <Trophy className="h-2.5 w-2.5" />
                 Winner: {result.variants.find((v) => v.id === result.winner)?.name}
                 {result.confidence > 0 && ` (${result.confidence}%)`}
@@ -121,7 +123,7 @@ function MetricBar({
   };
 
   return (
-    <div className="flex items-center justify-between text-[10px]">
+    <div className="flex items-center justify-between text-[11px]">
       <span className="text-muted-foreground">{label}</span>
       <div className="flex items-center gap-2">
         <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">

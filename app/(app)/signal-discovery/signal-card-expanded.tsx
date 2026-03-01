@@ -41,17 +41,17 @@ export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enr
           <div className="mt-3 flex items-center justify-between">
             <div className="flex gap-1.5 flex-wrap">
               {signal.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
+                <Badge key={tag} variant="secondary" className="text-[11px] px-1.5 py-0">
                   {tag}
                 </Badge>
               ))}
             </div>
-            <span className="text-[10px] text-muted-foreground whitespace-nowrap">{signal.recency}</span>
+            <span className="text-[11px] text-muted-foreground whitespace-nowrap">{signal.recency}</span>
           </div>
 
           {/* Enrichment data */}
           {enrichment && (enrichment.employees || enrichment.revenue || enrichment.headquarters || enrichment.techStack) && (
-            <div className="mt-3 flex flex-wrap gap-3 text-[10px] text-muted-foreground">
+            <div className="mt-3 flex flex-wrap gap-3 text-[11px] text-muted-foreground">
               {enrichment.employees && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3 w-3" /> {enrichment.employees.toLocaleString()} employees
@@ -80,7 +80,7 @@ export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enr
             <>
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="mt-3 flex items-center gap-1 text-[10px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                className="mt-3 flex items-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
               >
                 <Lightbulb className="h-3 w-3" />
                 Why this signal?
@@ -90,19 +90,19 @@ export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enr
                 <div className="mt-2 space-y-2 animate-in slide-in-from-top-1 fade-in-0 duration-200">
                   {signal.explanation && (
                     <div className="rounded-lg bg-blue-50/50 border border-blue-100 p-3">
-                      <p className="text-[10px] font-semibold text-blue-800 mb-1">Attribution Logic</p>
-                      <p className="text-[10px] text-blue-700/80 leading-relaxed">{signal.explanation}</p>
+                      <p className="text-[11px] font-semibold text-blue-800 mb-1">Attribution Logic</p>
+                      <p className="text-[11px] text-blue-700/80 leading-relaxed">{signal.explanation}</p>
                     </div>
                   )}
                   {signal.suggestedAction && (
                     <div className="rounded-lg bg-green-50/50 border border-green-100 p-3">
-                      <p className="text-[10px] font-semibold text-green-800 mb-1">Suggested Action</p>
-                      <p className="text-[10px] text-green-700/80 leading-relaxed">{signal.suggestedAction}</p>
+                      <p className="text-[11px] font-semibold text-green-800 mb-1">Suggested Action</p>
+                      <p className="text-[11px] text-green-700/80 leading-relaxed">{signal.suggestedAction}</p>
                       <div className="flex gap-2 mt-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-6 text-[10px] gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                          className="h-6 text-[11px] gap-1 border-green-200 text-green-700 hover:bg-green-50"
                           onClick={() => setActionOpen(true)}
                         >
                           Take Action <ArrowRight className="h-2.5 w-2.5" />
@@ -110,7 +110,7 @@ export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enr
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-6 text-[10px] gap-1 border-blue-200 text-blue-700 hover:bg-blue-50"
+                          className="h-6 text-[11px] gap-1 border-blue-200 text-blue-700 hover:bg-blue-50"
                           onClick={() => setLinkedinOpen(true)}
                         >
                           <Linkedin className="h-2.5 w-2.5" />

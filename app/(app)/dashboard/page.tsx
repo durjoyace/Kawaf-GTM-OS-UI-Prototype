@@ -14,12 +14,19 @@ export default async function DashboardPage() {
     <>
       <TopBar title="Dashboard" subtitle="Real-time GTM performance overview" />
       <div className="p-6 space-y-6">
+        <div>
+          <h2 className="text-sm font-semibold">Overview</h2>
+          <p className="text-xs text-muted-foreground">Last 30 days</p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {data.kpis.map((kpi) => (
             <KpiCard key={kpi.label} metric={kpi} />
           ))}
         </div>
-        <DashboardChart data={data.chartData} />
+        <div>
+          <h2 className="text-sm font-semibold mb-4">Revenue Trend</h2>
+          <DashboardChart data={data.chartData} />
+        </div>
       </div>
     </>
   );

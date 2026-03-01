@@ -5,8 +5,28 @@ import { useParams } from "next/navigation";
 import { TopBar } from "@/components/top-bar";
 import { SequenceAnalytics } from "@/components/sequence-analytics";
 import { AbTestResults } from "@/components/ab-test-results";
+import { KpiGridSkeleton, TableSkeleton } from "@/components/loading-skeleton";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+
+interface AbVariant {
+  id: string;
+  name: string;
+  sends: number;
+  opens: number;
+  clicks: number;
+  replies: number;
+  openRate: number;
+  clickRate: number;
+}
+
+interface AbStepResult {
+  stepIndex: number;
+  stepType: string;
+  variants: AbVariant[];
+  winner: string | null;
+  confidence: number;
+}
 
 interface AnalyticsData {
   sequenceId: string;
@@ -23,6 +43,7 @@ interface AnalyticsData {
     subject: string;
     reached: number;
     completionRate: number;
+    abResults?: AbStepResult[];
   }>;
 }
 
@@ -38,6 +59,11 @@ export default function SequenceDetailPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id]);
+
+  // Extract AB results from step metrics if available
+  const abResults = data?.stepMetrics
+    ?.flatMap((s) => s.abResults ?? [])
+    .filter((r): r is AbStepResult => r !== undefined);
 
   return (
     <>
@@ -55,8 +81,9 @@ export default function SequenceDetailPage() {
         </Link>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500" />
+          <div className="space-y-6">
+            <KpiGridSkeleton count={6} />
+            <TableSkeleton rows={4} />
           </div>
         ) : data ? (
           <>
@@ -69,7 +96,7 @@ export default function SequenceDetailPage() {
               meetingsBooked={data.meetingsBooked}
               stepMetrics={data.stepMetrics}
             />
-            <AbTestResults sequenceId={data.sequenceId} />
+            <AbTestResults sequenceId={data.sequenceId} data={abResults} />
           </>
         ) : (
           <p className="text-sm text-muted-foreground">Sequence not found.</p>

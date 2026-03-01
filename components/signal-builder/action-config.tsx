@@ -31,7 +31,7 @@ export function ActionConfig({
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Signal Type</label>
+          <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Signal Type</label>
           <input
             type="text"
             value={signalType}
@@ -42,7 +42,7 @@ export function ActionConfig({
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Category</label>
+          <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Category</label>
           <select
             value={category}
             onChange={(e) => onCategoryChange(e.target.value)}
@@ -55,7 +55,7 @@ export function ActionConfig({
         </div>
 
         <div>
-          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Impact</label>
+          <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Impact</label>
           <select
             value={impact}
             onChange={(e) => onImpactChange(e.target.value)}

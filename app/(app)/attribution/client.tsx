@@ -46,7 +46,7 @@ export function AttributionClient({ chartData, funnelData }: Props) {
             }`}
           >
             <p className={`text-xs font-medium ${model === m.value ? "text-blue-700" : ""}`}>{m.label}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{m.description}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">{m.description}</p>
           </button>
         ))}
       </div>

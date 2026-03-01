@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Radar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CategoryTile } from "@/components/category-tile";
 import { DataToolbar } from "@/components/data-toolbar";
+import { EmptyState } from "@/components/empty-state";
 import { SignalCardExpanded } from "./signal-card-expanded";
 import type { Signal, SignalCategoryCount } from "@/lib/types/models";
 
-const tabs = [
-  { label: "All Signals", value: "all", count: undefined },
+const tabDefs = [
+  { label: "All Signals", value: "all" },
   { label: "Product", value: "product-analytics" },
   { label: "Firmographic", value: "firmographics" },
   { label: "CRM", value: "crm-data" },
@@ -59,6 +61,19 @@ export function SignalDiscoveryClient({ initialSignals, categories }: Props) {
     return result;
   }, [initialSignals, activeTab, search, sortBy]);
 
+  // Compute live tab counts
+  const tabs = useMemo(
+    () =>
+      tabDefs.map((t) => ({
+        ...t,
+        count:
+          t.value === "all"
+            ? initialSignals.length
+            : initialSignals.filter((s) => s.category === t.value).length,
+      })),
+    [initialSignals]
+  );
+
   return (
     <div className="p-6 space-y-6">
       {/* Category tiles */}
@@ -85,17 +100,17 @@ export function SignalDiscoveryClient({ initialSignals, categories }: Props) {
       <div className="rounded-xl border bg-gradient-to-r from-blue-50/80 to-indigo-50/50 px-4 py-3 flex items-center gap-3 flex-wrap">
         <span className="text-xs font-semibold text-blue-800">Signal Attribution Logic</span>
         <div className="flex gap-2">
-          <Badge variant="secondary" className="text-[10px] bg-green-100 text-green-700 border-green-200">
+          <Badge variant="secondary" className="text-[11px] bg-green-100 text-green-700 border-green-200">
             High &ge;80%
           </Badge>
-          <Badge variant="secondary" className="text-[10px] bg-amber-100 text-amber-700 border-amber-200">
+          <Badge variant="secondary" className="text-[11px] bg-amber-100 text-amber-700 border-amber-200">
             Med 60-79%
           </Badge>
-          <Badge variant="secondary" className="text-[10px] bg-red-100 text-red-700 border-red-200">
+          <Badge variant="secondary" className="text-[11px] bg-red-100 text-red-700 border-red-200">
             Low &lt;60%
           </Badge>
         </div>
-        <p className="text-[10px] text-blue-600/70 ml-auto">
+        <p className="text-[11px] text-blue-600/70 ml-auto">
           Confidence scores combine source reliability, signal recency, and historical conversion correlation
         </p>
       </div>
@@ -108,10 +123,11 @@ export function SignalDiscoveryClient({ initialSignals, categories }: Props) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-sm font-medium text-muted-foreground">No signals match your filters</p>
-          <p className="text-xs text-muted-foreground mt-1">Try adjusting your search or category filter</p>
-        </div>
+        <EmptyState
+          icon={<Radar className="h-6 w-6 text-muted-foreground" />}
+          title="No signals found"
+          description="Try adjusting your search or category filter to find matching signals."
+        />
       )}
     </div>
   );

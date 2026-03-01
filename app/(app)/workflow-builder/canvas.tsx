@@ -127,7 +127,7 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
     toast.info("Node deleted");
   }
 
-  async function handleSave() {
+  async function handleSave(): Promise<string | null> {
     setSaving(true);
     try {
       const payload = { name: "My Workflow", nodes, edges };
@@ -137,6 +137,8 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        toast.success("Draft saved", { description: `${nodes.length} nodes, ${edges.length} connections` });
+        return workflowId;
       } else {
         const res = await fetch("/api/workflows", {
           method: "POST",
@@ -145,22 +147,22 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
         });
         const data = await res.json();
         setWorkflowId(data.id);
+        toast.success("Draft saved", { description: `${nodes.length} nodes, ${edges.length} connections` });
+        return data.id;
       }
-      toast.success("Draft saved", { description: `${nodes.length} nodes, ${edges.length} connections` });
     } catch {
       toast.error("Failed to save workflow");
+      return null;
     } finally {
       setSaving(false);
     }
   }
 
   async function handlePublish() {
-    if (!workflowId) {
-      await handleSave();
-    }
-    if (!workflowId) return;
+    const savedId = workflowId ?? (await handleSave());
+    if (!savedId) return;
     try {
-      await fetch(`/api/workflows/${workflowId}/publish`, { method: "POST" });
+      await fetch(`/api/workflows/${savedId}/publish`, { method: "POST" });
       setPublished(true);
       toast.success("Workflow published!", {
         description: "Your workflow is now live and processing signals.",
@@ -171,7 +173,7 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
   }
 
   return (
-    <div className="flex h-[calc(100vh-57px)]">
+    <div className="flex h-[calc(100vh-3.5rem)]">
       <NodeLibrary nodes={nodeLibrary} onAddNode={addNode} />
       <div className="flex-1 relative">
         {/* Toolbar */}
@@ -191,7 +193,7 @@ export function WorkflowCanvas({ nodeLibrary }: WorkflowCanvasProps) {
         </div>
         {/* Status badge */}
         <div className="absolute top-3 left-3 z-10">
-          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium shadow-sm bg-white/90 backdrop-blur-sm ${published ? "text-green-700 border-green-200" : "text-amber-700 border-amber-200"}`}>
+          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-sm bg-white/90 backdrop-blur-sm ${published ? "text-green-700 border-green-200" : "text-amber-700 border-amber-200"}`}>
             <span className={`h-1.5 w-1.5 rounded-full ${published ? "bg-green-500" : "bg-amber-500"}`} />
             {published ? "Live" : "Draft"}
           </span>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Radar, GitBranch, Target, GripVertical, X } from "lucide-react";
+import { BarChart3, Radar, GitBranch, Target, X } from "lucide-react";
 
 interface Widget {
   type: string;
@@ -54,7 +54,7 @@ export function ReportBuilder({ widgets, onChange }: ReportBuilderProps) {
                 }`}
               >
                 <w.icon className="h-4 w-4 text-slate-500" />
-                <span className="text-[10px] font-medium">{w.title}</span>
+                <span className="text-[11px] font-medium">{w.title}</span>
               </button>
             );
           })}
@@ -70,7 +70,6 @@ export function ReportBuilder({ widgets, onChange }: ReportBuilderProps) {
           <div className="space-y-2">
             {widgets.map((widget, index) => (
               <Card key={widget.type} className="p-3 flex items-center gap-3">
-                <GripVertical className="h-4 w-4 text-slate-300 cursor-grab" />
                 <span className="text-xs font-medium flex-1">{widget.title}</span>
                 <button
                   onClick={() => removeWidget(index)}

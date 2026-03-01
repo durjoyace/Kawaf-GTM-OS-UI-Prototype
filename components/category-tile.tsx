@@ -20,7 +20,7 @@ export function CategoryTile({ category }: { category: SignalCategoryCount }) {
       </div>
       <div>
         <p className="text-lg font-bold leading-tight">{category.count}</p>
-        <p className="text-[10px] text-muted-foreground">{category.label}</p>
+        <p className="text-[11px] text-muted-foreground">{category.label}</p>
       </div>
     </Card>
   );

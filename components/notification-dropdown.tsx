@@ -72,31 +72,41 @@ export function NotificationDropdown() {
         <div className="border-b px-4 py-2.5 flex items-center justify-between">
           <div>
             <p className="text-sm font-semibold">Notifications</p>
-            <p className="text-[10px] text-muted-foreground">{unreadCount} unread</p>
+            <p className="text-[11px] text-muted-foreground">{unreadCount} unread</p>
           </div>
           {unreadCount > 0 && (
-            <Button variant="ghost" size="sm" className="h-6 text-[10px] text-muted-foreground" onClick={markAllRead}>
+            <Button variant="ghost" size="sm" className="h-6 text-[11px] text-muted-foreground" onClick={markAllRead}>
               Mark all read
             </Button>
           )}
         </div>
         <div className="max-h-[320px] overflow-y-auto divide-y">
-          {notifications.map((n) => {
-            const Icon = typeIcons[n.type] || Bell;
-            return (
-              <div key={n.id} className={`flex items-start gap-3 px-4 py-3 hover:bg-accent/50 transition-colors cursor-pointer ${!n.read ? "bg-blue-50/40" : ""}`}>
-                <div className={`rounded-full p-1.5 mt-0.5 ${!n.read ? "bg-blue-100" : "bg-gray-100"}`}>
-                  <Icon className={`h-3 w-3 ${!n.read ? "text-blue-600" : "text-muted-foreground"}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-xs ${!n.read ? "font-semibold" : "font-medium"}`}>{n.title}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{n.description}</p>
-                  <p className="text-[10px] text-muted-foreground/60 mt-0.5">{n.time}</p>
-                </div>
-                {!n.read && <div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />}
+          {notifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center px-4">
+              <div className="rounded-full bg-muted p-3 mb-2">
+                <Bell className="h-5 w-5 text-muted-foreground" />
               </div>
-            );
-          })}
+              <p className="text-xs font-semibold">All caught up</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">No new notifications</p>
+            </div>
+          ) : (
+            notifications.map((n) => {
+              const Icon = typeIcons[n.type] || Bell;
+              return (
+                <div key={n.id} className={`flex items-start gap-3 px-4 py-3 hover:bg-accent/50 transition-colors cursor-pointer ${!n.read ? "bg-blue-50/40" : ""}`}>
+                  <div className={`rounded-full p-1.5 mt-0.5 ${!n.read ? "bg-blue-100" : "bg-gray-100"}`}>
+                    <Icon className={`h-3 w-3 ${!n.read ? "text-blue-600" : "text-muted-foreground"}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs ${!n.read ? "font-semibold" : "font-medium"}`}>{n.title}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{n.description}</p>
+                    <p className="text-[11px] text-muted-foreground/60 mt-0.5">{n.time}</p>
+                  </div>
+                  {!n.read && <div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />}
+                </div>
+              );
+            })
+          )}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

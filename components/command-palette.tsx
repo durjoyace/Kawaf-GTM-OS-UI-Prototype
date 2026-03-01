@@ -66,12 +66,12 @@ export function CommandPalette() {
             className="border-0 h-11 text-sm focus-visible:ring-0 shadow-none"
             autoFocus
           />
-          <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
+          <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 text-[11px] font-medium text-muted-foreground">
             ESC
           </kbd>
         </div>
         <div className="max-h-[300px] overflow-y-auto p-1">
-          <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <p className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Pages
           </p>
           {filtered.map((page) => (

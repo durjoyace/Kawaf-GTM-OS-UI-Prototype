@@ -23,7 +23,7 @@ export function TopBar({ title, subtitle, actions }: TopBarProps) {
         <button className="relative hidden md:flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent transition-colors w-[220px]">
           <Search className="h-3.5 w-3.5" />
           <span className="flex-1 text-left">Search signals, accounts...</span>
-          <kbd className="hidden lg:inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 text-[10px] font-medium">
+          <kbd className="hidden lg:inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 text-[11px] font-medium">
             <span className="text-xs">&#8984;</span>K
           </kbd>
         </button>
@@ -33,7 +33,7 @@ export function TopBar({ title, subtitle, actions }: TopBarProps) {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
           </span>
-          <span className="text-[10px] font-medium text-muted-foreground">Live</span>
+          <span className="text-[11px] font-medium text-muted-foreground">Live</span>
         </div>
 
         {actions}

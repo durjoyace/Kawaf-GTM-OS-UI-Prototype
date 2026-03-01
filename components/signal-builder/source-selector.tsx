@@ -30,7 +30,7 @@ export function SourceSelector({ value, onChange }: SourceSelectorProps) {
         >
           <source.icon className={`h-5 w-5 ${value === source.type ? "text-green-600" : "text-slate-500"}`} />
           <span className="text-xs font-medium">{source.label}</span>
-          <span className="text-[10px] text-muted-foreground text-center">{source.description}</span>
+          <span className="text-[11px] text-muted-foreground text-center">{source.description}</span>
         </button>
       ))}
     </div>

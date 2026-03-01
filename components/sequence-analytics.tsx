@@ -54,7 +54,7 @@ export function SequenceAnalytics({
         {kpis.map((kpi) => (
           <Card key={kpi.label} className="p-3 text-center">
             <p className="text-lg font-bold">{kpi.value}</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{kpi.label}</p>
+            <p className="text-[11px] text-muted-foreground uppercase tracking-wider">{kpi.label}</p>
           </Card>
         ))}
       </div>
@@ -72,7 +72,7 @@ export function SequenceAnalytics({
                     {metric.step}
                   </span>
                   <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-xs truncate">{metric.subject}</span>
+                  <span className="text-xs truncate" title={metric.subject}>{metric.subject}</span>
                 </div>
                 <div className="flex-1">
                   <Progress value={metric.completionRate} className="h-2" />

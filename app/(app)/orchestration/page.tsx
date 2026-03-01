@@ -3,7 +3,9 @@ import { getSessionContext } from "@/lib/api/utils";
 import { TopBar } from "@/components/top-bar";
 import { KpiCard } from "@/components/kpi-card";
 import { SequenceCard } from "@/components/sequence-card";
-import { Plus } from "lucide-react";
+import { EmptyState } from "@/components/empty-state";
+import { Button } from "@/components/ui/button";
+import { Plus, GitBranch } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -26,17 +28,25 @@ export default async function OrchestrationPage() {
 
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold">Sequences</h2>
-          <button className="inline-flex items-center gap-1 text-xs text-green-600 font-medium hover:text-green-700">
+          <Button size="sm" variant="outline" className="gap-1 text-xs">
             <Plus className="h-3.5 w-3.5" />
             New
-          </button>
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {sequences.map((seq) => (
-            <SequenceCard key={seq.id} sequence={seq} />
-          ))}
-        </div>
+        {sequences.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            {sequences.map((seq) => (
+              <SequenceCard key={seq.id} sequence={seq} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={<GitBranch className="h-6 w-6 text-muted-foreground" />}
+            title="No sequences yet"
+            description="Create your first multi-channel sequence to start engaging prospects."
+          />
+        )}
       </div>
     </>
   );

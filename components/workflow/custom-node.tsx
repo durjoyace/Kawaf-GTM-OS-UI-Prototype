@@ -40,7 +40,7 @@ function CustomNodeComponent({ data, selected }: NodeProps & { data: WorkflowNod
         </div>
         <div>
           <p className="text-xs font-semibold text-gray-800">{data.label}</p>
-          <p className="text-[10px] text-gray-500 capitalize">{data.category}</p>
+          <p className="text-[11px] text-gray-500 capitalize">{data.category}</p>
         </div>
       </div>
       {data.category !== "end" && (

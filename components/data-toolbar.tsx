@@ -52,7 +52,7 @@ export function DataToolbar({
               <button
                 key={sort.value}
                 onClick={() => onSortChange?.(sort.value)}
-                className={`rounded-md px-2.5 py-1 text-[10px] font-medium transition-colors ${
+                className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
                   activeSort === sort.value
                     ? "bg-slate-800 text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -82,7 +82,7 @@ export function DataToolbar({
             >
               {tab.label}
               {tab.count !== undefined && (
-                <span className={`text-[10px] ${activeTab === tab.value ? "opacity-80" : "text-muted-foreground"}`}>
+                <span className={`text-[11px] ${activeTab === tab.value ? "opacity-80" : "text-muted-foreground"}`}>
                   {tab.count}
                 </span>
               )}

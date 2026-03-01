@@ -22,7 +22,7 @@ export function FunnelSection({ data }: { data: AttributionEvent[] }) {
                 ? `$${(item.value / 1000000).toFixed(1)}M`
                 : item.value.toLocaleString()}
             </span>
-            <span className="text-[10px] text-muted-foreground w-10 text-right">
+            <span className="text-[11px] text-muted-foreground w-10 text-right">
               {item.percentage}%
             </span>
           </div>

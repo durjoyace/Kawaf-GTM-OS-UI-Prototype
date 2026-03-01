@@ -22,12 +22,12 @@ export function SignalCard({ signal }: { signal: Signal }) {
           <div className="mt-3 flex items-center justify-between">
             <div className="flex gap-1.5 flex-wrap">
               {signal.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
+                <Badge key={tag} variant="secondary" className="text-[11px] px-1.5 py-0">
                   {tag}
                 </Badge>
               ))}
             </div>
-            <span className="text-[10px] text-muted-foreground whitespace-nowrap">{signal.recency}</span>
+            <span className="text-[11px] text-muted-foreground whitespace-nowrap">{signal.recency}</span>
           </div>
         </div>
       </div>

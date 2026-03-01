@@ -19,9 +19,9 @@ export function IntegrationCard({ integration, onConnect }: IntegrationCardProps
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-sm">{integration.name}</h3>
-            <span className="text-[10px] text-muted-foreground bg-gray-100 rounded px-1.5 py-0.5">{integration.category}</span>
+            <span className="text-[11px] text-muted-foreground bg-gray-100 rounded px-1.5 py-0.5">{integration.category}</span>
             {integration.isNative && (
-              <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-600 bg-amber-50 rounded px-1.5 py-0.5">
+              <span className="inline-flex items-center gap-0.5 text-[11px] text-amber-600 bg-amber-50 rounded px-1.5 py-0.5">
                 <Zap className="h-2.5 w-2.5" />
                 Native
               </span>

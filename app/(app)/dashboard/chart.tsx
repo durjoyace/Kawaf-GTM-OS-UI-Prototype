@@ -21,18 +21,18 @@ export function DashboardChart({ data }: { data: ChartDataPoint[] }) {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <defs>
-              <linearGradient id="colorPipeline" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="dashboard-colorPipeline" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="colorClosed" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="dashboard-colorClosed" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#22c55e" stopOpacity={0.15} />
                 <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
             <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#94a3b8" />
-            <YAxis tick={{ fontSize: 12 }} stroke="#94a3b8" />
+            <YAxis tick={{ fontSize: 12 }} stroke="#94a3b8" tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
             <Tooltip
               contentStyle={{
                 borderRadius: "8px",
@@ -50,7 +50,7 @@ export function DashboardChart({ data }: { data: ChartDataPoint[] }) {
               dataKey="pipeline"
               name="Pipeline"
               stroke="#3b82f6"
-              fill="url(#colorPipeline)"
+              fill="url(#dashboard-colorPipeline)"
               strokeWidth={2}
             />
             <Area
@@ -58,7 +58,7 @@ export function DashboardChart({ data }: { data: ChartDataPoint[] }) {
               dataKey="closed"
               name="Closed"
               stroke="#22c55e"
-              fill="url(#colorClosed)"
+              fill="url(#dashboard-colorClosed)"
               strokeWidth={2}
             />
           </AreaChart>

@@ -164,7 +164,7 @@ export function SequenceStepEditor({ steps, onChange }: SequenceStepEditorProps)
                 {step.variants.map((variant, vIndex) => (
                   <div key={variant.id} className="rounded-lg border border-slate-200 p-2.5 space-y-2">
                     <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                      <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded ${
                         vIndex === 0 ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"
                       }`}>
                         {variant.name}

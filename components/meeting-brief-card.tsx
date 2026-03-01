@@ -36,11 +36,11 @@ export function MeetingBriefCard({
             <div key={section.title} className={`rounded-lg ${section.bg} p-3`}>
               <div className="flex items-center gap-1.5 mb-2">
                 <section.icon className={`h-3.5 w-3.5 ${section.color}`} />
-                <span className={`text-[10px] font-semibold ${section.color}`}>{section.title}</span>
+                <span className={`text-[11px] font-semibold ${section.color}`}>{section.title}</span>
               </div>
               <ul className="space-y-1">
                 {section.items.map((item, i) => (
-                  <li key={i} className="text-[10px] text-slate-700 leading-relaxed flex items-start gap-1.5">
+                  <li key={i} className="text-[11px] text-slate-700 leading-relaxed flex items-start gap-1.5">
                     <span className="mt-1 h-1 w-1 rounded-full bg-slate-400 shrink-0" />
                     {item}
                   </li>

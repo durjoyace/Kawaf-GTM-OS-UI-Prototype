@@ -36,14 +36,14 @@ export function NodeLibrary({ nodes, onAddNode }: NodeLibraryProps) {
   return (
     <div className="w-[220px] border-r bg-white flex flex-col">
       <div className="px-4 py-3 border-b">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
           Node Library
         </p>
       </div>
       <div className="flex-1 overflow-auto p-3 space-y-4">
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="text-[10px] font-medium text-muted-foreground mb-1.5">{group.label}</p>
+            <p className="text-[11px] font-medium text-muted-foreground mb-1.5">{group.label}</p>
             <div className="space-y-1">
               {group.items.map((node) => {
                 const Icon = iconMap[node.icon] || Zap;

@@ -21,7 +21,7 @@ export function AttributionChart({ data }: { data: ChartDataPoint[] }) {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <defs>
-              <linearGradient id="colorSignal" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="attribution-colorSignal" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
@@ -46,7 +46,7 @@ export function AttributionChart({ data }: { data: ChartDataPoint[] }) {
               dataKey="signal"
               name="Signal"
               stroke="#3b82f6"
-              fill="url(#colorSignal)"
+              fill="url(#attribution-colorSignal)"
               strokeWidth={2}
             />
             <Area

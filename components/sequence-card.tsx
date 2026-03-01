@@ -23,29 +23,29 @@ export function SequenceCard({ sequence }: { sequence: Sequence }) {
       <div className="mt-4 grid grid-cols-5 gap-2 text-center">
         <div>
           <p className="text-lg font-bold">{sequence.enrolled.toLocaleString()}</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Enrolled</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Enrolled</p>
         </div>
         <div>
           <p className="text-lg font-bold">{sequence.steps}</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Steps</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Steps</p>
         </div>
         <div>
           <p className="text-lg font-bold">{sequence.openRate}%</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Open</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Open</p>
         </div>
         <div>
           <p className="text-lg font-bold">{sequence.replyRate}%</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Reply</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Reply</p>
         </div>
         <div>
           <p className="text-lg font-bold">{sequence.meetingsBooked}</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Meetings</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Meetings</p>
         </div>
       </div>
       <div className="mt-4">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] text-muted-foreground">Progress</span>
-          <span className="text-[10px] font-medium">{sequence.progress}%</span>
+          <span className="text-[11px] text-muted-foreground">Progress</span>
+          <span className="text-[11px] font-medium">{sequence.progress}%</span>
         </div>
         <Progress value={sequence.progress} className="h-1.5" />
       </div>
