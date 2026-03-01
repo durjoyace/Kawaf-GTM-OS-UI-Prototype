@@ -20,6 +20,7 @@ import {
   Wand2,
   FileBarChart,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -76,6 +77,7 @@ interface SidebarNavProps {
 
 export function SidebarNav({ collapsed, onToggle }: SidebarNavProps) {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <aside
@@ -111,7 +113,7 @@ export function SidebarNav({ collapsed, onToggle }: SidebarNavProps) {
         <div className="mx-3 mt-3 rounded-lg bg-white/5 px-3 py-2 cursor-pointer hover:bg-white/10 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium">Kawaf Corp</p>
+              <p className="text-xs font-medium">{session?.user?.name ? `${session.user.name}'s Workspace` : "Workspace"}</p>
               <p className="text-[11px] text-slate-400">Enterprise</p>
             </div>
             <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
@@ -184,12 +186,12 @@ export function SidebarNav({ collapsed, onToggle }: SidebarNavProps) {
       <div className="border-t border-white/10 px-3 py-3">
         <div className="flex items-center gap-2.5">
           <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs font-bold shrink-0">
-            AK
+            {session?.user?.name?.split(" ").map(n => n[0]).join("").slice(0, 2) ?? "?"}
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="text-xs font-medium truncate">Ahmed K.</p>
-              <p className="text-[11px] text-slate-400 truncate">admin@kawaf.io</p>
+              <p className="text-xs font-medium truncate">{session?.user?.name ?? "User"}</p>
+              <p className="text-[11px] text-slate-400 truncate">{session?.user?.email ?? ""}</p>
             </div>
           )}
         </div>

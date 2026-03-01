@@ -1,7 +1,13 @@
 import { EncryptJWT, jwtDecrypt } from "jose";
 
+const rawKey = process.env.AUTH_SECRET?.slice(0, 32);
+if (!rawKey || rawKey.length < 32) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("AUTH_SECRET must be at least 32 characters for encryption");
+  }
+}
 const SECRET_KEY = new TextEncoder().encode(
-  process.env.AUTH_SECRET?.slice(0, 32) ?? "default-key-for-development-only"
+  rawKey ?? "dev-only-key-not-for-production!"
 );
 
 export async function encryptTokens(tokens: Record<string, string>): Promise<string> {

@@ -51,7 +51,7 @@ export function Testimonials() {
             TESTIMONIALS
           </span>
 
-          <div className="relative mt-10 min-h-[220px]">
+          <div className="relative mt-10 min-h-[220px]" aria-live="polite" aria-atomic="true">
             {/* Quote mark */}
             <span className="pointer-events-none absolute -top-4 left-1/2 -translate-x-1/2 font-serif text-7xl text-[var(--mkt-accent)]/20 select-none">
               &ldquo;

@@ -6,6 +6,8 @@ export function SignalVisualization() {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="h-auto w-full"
+        role="img"
+        aria-label="Diagram showing AI engine processing CRM, website, and news signals into email, CRM updates, and alerts"
       >
         {/* Definitions */}
         <defs>

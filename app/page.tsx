@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { MarketingHeader } from "@/components/marketing/marketing-header";
@@ -9,6 +10,11 @@ import { FeatureGrid } from "@/components/marketing/feature-grid";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { TrustBadges } from "@/components/marketing/trust-badges";
 import { CtaSection } from "@/components/marketing/cta-section";
+
+export const metadata: Metadata = {
+  title: "Kawaf GTM OS — AI-Powered Go-To-Market Intelligence",
+  description: "Detect buying signals, draft personalized outreach, and close deals faster with AI — at 1/50th the cost of a GTM agency.",
+};
 
 export default async function Home() {
   const session = await auth();

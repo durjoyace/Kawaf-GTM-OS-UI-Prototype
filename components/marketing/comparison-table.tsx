@@ -18,6 +18,7 @@ export function ComparisonTable() {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[600px] border-collapse text-left">
+        <caption className="sr-only">Feature comparison between Kawaf and Smoke Signals AI</caption>
         <colgroup>
           <col className="w-[50%]" />
           <col className="w-[25%]" />
@@ -25,10 +26,10 @@ export function ComparisonTable() {
         </colgroup>
         <thead>
           <tr className="border-b border-[var(--mkt-border)]">
-            <th className="py-3 pr-4 text-sm font-medium text-[var(--mkt-text-muted)]">
+            <th scope="col" className="py-3 pr-4 text-sm font-medium text-[var(--mkt-text-muted)]">
               Feature
             </th>
-            <th className="px-4 py-3 text-center">
+            <th scope="col" className="px-4 py-3 text-center">
               <div className="text-sm font-semibold text-[var(--mkt-text)]">
                 Kawaf
               </div>
@@ -36,7 +37,7 @@ export function ComparisonTable() {
                 From $99/mo
               </div>
             </th>
-            <th className="px-4 py-3 text-center">
+            <th scope="col" className="px-4 py-3 text-center">
               <div className="text-sm font-semibold text-[var(--mkt-text)]">
                 {competitorInfo.name}
               </div>

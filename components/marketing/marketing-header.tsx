@@ -61,6 +61,7 @@ export function MarketingHeader() {
           className="rounded-md p-2 text-[var(--mkt-text-secondary)] hover:text-[var(--mkt-text)] md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? (
             <X className="h-5 w-5" />

@@ -9,13 +9,7 @@ const footerLinks = {
   ],
   Resources: [
     { href: "/developers", label: "API Docs" },
-    { href: "#", label: "Blog" },
-    { href: "#", label: "Changelog" },
-  ],
-  Legal: [
-    { href: "#", label: "Privacy" },
-    { href: "#", label: "Terms" },
-    { href: "#", label: "Security" },
+    { href: "/login", label: "Sign In" },
   ],
 };
 
@@ -23,7 +17,7 @@ export function MarketingFooter() {
   return (
     <footer className="border-t border-[var(--mkt-border)] bg-[var(--mkt-bg)]">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2">
             <Link href="/" className="inline-flex items-center gap-2.5">

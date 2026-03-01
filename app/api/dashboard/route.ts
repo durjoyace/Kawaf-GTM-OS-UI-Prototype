@@ -1,7 +1,14 @@
 import { getDashboardData } from "@/lib/data/api";
-import { json } from "@/lib/api/utils";
+import { json, error, getSessionContext, AuthError } from "@/lib/api/utils";
 
 export async function GET() {
-  const data = await getDashboardData();
-  return json(data);
+  try {
+    const ctx = await getSessionContext();
+    const data = await getDashboardData(ctx.workspaceId);
+    return json(data);
+  } catch (err) {
+    if (err instanceof AuthError) return error("Unauthorized", 401);
+    console.error("[Dashboard API]", err);
+    return error("Internal server error", 500);
+  }
 }

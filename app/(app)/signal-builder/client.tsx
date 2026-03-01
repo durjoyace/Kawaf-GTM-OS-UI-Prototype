@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SourceSelector } from "@/components/signal-builder/source-selector";
@@ -20,7 +19,6 @@ interface SignalSource {
 }
 
 export function SignalBuilderClient({ sources: initialSources }: { sources: SignalSource[] }) {
-  const router = useRouter();
   const [sources, setSources] = useState(initialSources);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);

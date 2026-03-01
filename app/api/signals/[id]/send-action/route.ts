@@ -38,7 +38,14 @@ export async function POST(
   // Generate tracking ID and wrap HTML with tracking
   const trackingId = crypto.randomUUID();
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.kawaf.io";
-  const rawHtml = `<div style="font-family: sans-serif; line-height: 1.6;">${emailBody.replace(/\n/g, "<br>")}</div>`;
+  // Sanitize email body — escape HTML entities to prevent injection
+  const sanitized = emailBody
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>");
+  const rawHtml = `<div style="font-family: sans-serif; line-height: 1.6;">${sanitized}</div>`;
   const trackedHtml = wrapEmailWithTracking(rawHtml, trackingId, baseUrl);
 
   // Send via Resend

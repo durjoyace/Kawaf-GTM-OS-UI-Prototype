@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
     customer: customerId,
     mode: "subscription",
     line_items: [{ price: plan.stripePriceId, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/settings/billing?success=true`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/settings/billing?canceled=true`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/settings/billing?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/settings/billing?canceled=true`,
     metadata: { workspaceId: ctx.workspaceId },
   });
 

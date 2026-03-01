@@ -12,27 +12,48 @@ export function error(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
 
+/**
+ * Wrap an API route handler with automatic error handling.
+ * Catches AuthError → 401, other errors → 500.
+ */
+export function withAuth(
+  handler: (...args: never[]) => Promise<NextResponse>
+) {
+  return async (...args: never[]) => {
+    try {
+      return await handler(...args);
+    } catch (err) {
+      if (err instanceof AuthError) {
+        return error("Unauthorized", 401);
+      }
+      console.error("[API Error]", err);
+      return error("Internal server error", 500);
+    }
+  };
+}
+
 export interface SessionContext {
   userId: string;
   workspaceId: string;
 }
 
-// Demo fallback for when auth is bypassed
-const DEMO_CONTEXT: SessionContext = {
-  userId: "demo-user-001",
-  workspaceId: "ws-001",
-};
+export class AuthError extends Error {
+  status = 401;
+  constructor() {
+    super("Unauthorized");
+  }
+}
 
 /**
  * Resolve the current user + workspace from the session.
- * Falls back to demo context when auth is bypassed.
+ * Throws AuthError when no valid session exists.
  * Auto-creates a workspace on first sign-in.
  */
 export async function getSessionContext(): Promise<SessionContext> {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return DEMO_CONTEXT;
+    throw new AuthError();
   }
 
   const userId = session.user.id;
@@ -86,5 +107,5 @@ export async function getSessionContext(): Promise<SessionContext> {
     return { userId, workspaceId: existing[0].id };
   }
 
-  return DEMO_CONTEXT;
+  throw new AuthError();
 }
