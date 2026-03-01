@@ -1,13 +1,14 @@
 import { db } from "@/lib/db";
 import { notifications } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { json, DEMO_USER_ID } from "@/lib/api/utils";
+import { json, getSessionContext } from "@/lib/api/utils";
 
 export async function POST() {
+  const ctx = await getSessionContext();
   await db
     .update(notifications)
     .set({ read: true })
-    .where(eq(notifications.userId, DEMO_USER_ID));
+    .where(eq(notifications.userId, ctx.userId));
 
   return json({ success: true });
 }

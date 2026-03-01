@@ -1,11 +1,16 @@
 import { getIntegrations, getIntegrationKpis } from "@/lib/data/api";
+import { getSessionContext } from "@/lib/api/utils";
 import { TopBar } from "@/components/top-bar";
 import { IntegrationsClient } from "./client";
 
 export const dynamic = "force-dynamic";
 
 export default async function IntegrationsPage() {
-  const [integrations, kpis] = await Promise.all([getIntegrations(), getIntegrationKpis()]);
+  const ctx = await getSessionContext();
+  const [integrations, kpis] = await Promise.all([
+    getIntegrations(ctx.workspaceId),
+    getIntegrationKpis(ctx.workspaceId),
+  ]);
 
   return (
     <>

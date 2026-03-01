@@ -1,12 +1,12 @@
 import type { IntegrationAdapter } from "./types";
 import { MockSalesforceAdapter } from "./adapters/mock-salesforce";
-import { MockHubSpotAdapter } from "./adapters/mock-hubspot";
+import { HubSpotAdapter } from "./adapters/hubspot";
 import { MockOutreachAdapter } from "./adapters/mock-outreach";
 import { MockLinkedInAdapter } from "./adapters/mock-linkedin";
 
 const adapters: Record<string, IntegrationAdapter> = {
   salesforce: new MockSalesforceAdapter(),
-  hubspot: new MockHubSpotAdapter(),
+  hubspot: new HubSpotAdapter(),
   outreach: new MockOutreachAdapter(),
   linkedin: new MockLinkedInAdapter(),
 };

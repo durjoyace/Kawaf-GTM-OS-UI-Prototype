@@ -2,6 +2,7 @@ import { inngest } from "../client";
 import { db } from "@/lib/db";
 import { sequenceEnrollments, sequences } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { sendEmail } from "@/lib/email/resend";
 
 export const executeSequenceStep = inngest.createFunction(
   { id: "execute-sequence-step", name: "Execute Sequence Step" },
@@ -48,7 +49,17 @@ export const executeSequenceStep = inngest.createFunction(
     const stepConfig = steps[currentStep];
 
     await step.run(`execute-step-${currentStep}`, async () => {
-      // Mock execution: in production, call the appropriate channel adapter
+      if (stepConfig.type === "email" && stepConfig.subject) {
+        const contactEmail = enrollment.contactId; // contactId stores email
+        await sendEmail({
+          to: contactEmail,
+          subject: stepConfig.subject,
+          html: `<p>${stepConfig.subject}</p>`,
+        });
+        return { type: "email", sent: true, to: contactEmail };
+      }
+
+      // Non-email steps (LinkedIn, call, etc.) — log for now
       console.log(`Executing ${stepConfig.type} step: ${stepConfig.subject ?? "action"}`);
       return { type: stepConfig.type, executed: true };
     });

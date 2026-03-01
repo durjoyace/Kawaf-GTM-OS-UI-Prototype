@@ -2,9 +2,10 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { integrations } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { json, error, WORKSPACE_ID } from "@/lib/api/utils";
+import { json, error, getSessionContext } from "@/lib/api/utils";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
+  const ctx = await getSessionContext();
   const { provider } = await params;
   const body = await req.json();
 
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
   const [existing] = await db
     .select()
     .from(integrations)
-    .where(and(eq(integrations.provider, provider), eq(integrations.workspaceId, WORKSPACE_ID)));
+    .where(and(eq(integrations.provider, provider), eq(integrations.workspaceId, ctx.workspaceId)));
 
   if (existing) {
     const [row] = await db
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ pro
   const [row] = await db
     .insert(integrations)
     .values({
-      workspaceId: WORKSPACE_ID,
+      workspaceId: ctx.workspaceId,
       provider,
       name: body.name ?? provider,
       status: "connected",

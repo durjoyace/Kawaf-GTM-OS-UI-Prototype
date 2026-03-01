@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(_request: NextRequest) {
-  // AUTH BYPASSED FOR DEMO — re-enable when Resend API key is configured
-  return NextResponse.next();
+export function middleware(request: NextRequest) {
+  const token =
+    request.cookies.get("__Secure-authjs.session-token") ??
+    request.cookies.get("authjs.session-token");
 
-  // const token =
-  //   request.cookies.get("__Secure-authjs.session-token") ??
-  //   request.cookies.get("authjs.session-token");
-  //
-  // if (!token) {
-  //   const loginUrl = new URL("/login", request.url);
-  //   loginUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
-  //   return NextResponse.redirect(loginUrl);
-  // }
-  //
-  // return NextResponse.next();
+  if (!token) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("callbackUrl", request.nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

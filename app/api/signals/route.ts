@@ -2,9 +2,10 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { signals, signalAccounts } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
-import { json, error, WORKSPACE_ID } from "@/lib/api/utils";
+import { json, error, getSessionContext } from "@/lib/api/utils";
 
 export async function GET(req: NextRequest) {
+  const ctx = await getSessionContext();
   const { searchParams } = req.nextUrl;
   const category = searchParams.get("category");
   const impact = searchParams.get("impact");
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
     })
     .from(signals)
     .leftJoin(signalAccounts, eq(signals.accountId, signalAccounts.id))
-    .where(eq(signals.workspaceId, WORKSPACE_ID))
+    .where(eq(signals.workspaceId, ctx.workspaceId))
     .orderBy(desc(signals.createdAt));
 
   let result = rows;
@@ -38,6 +39,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const ctx = await getSessionContext();
   const body = await req.json();
   const { signalType, category, description, confidence, confidenceLevel, impact, accountId, explanation, suggestedAction, tags } = body;
 
@@ -48,7 +50,7 @@ export async function POST(req: NextRequest) {
   const [row] = await db
     .insert(signals)
     .values({
-      workspaceId: WORKSPACE_ID,
+      workspaceId: ctx.workspaceId,
       accountId,
       signalType,
       category,

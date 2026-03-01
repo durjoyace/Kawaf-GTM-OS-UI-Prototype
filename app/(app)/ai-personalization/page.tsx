@@ -1,4 +1,5 @@
 import { getAccounts, getSignals } from "@/lib/data/api";
+import { getSessionContext } from "@/lib/api/utils";
 import { TopBar } from "@/components/top-bar";
 import { AccountRow } from "@/components/account-row";
 import { Card } from "@/components/ui/card";
@@ -7,7 +8,11 @@ import { Sparkles, TrendingUp, Zap, Target } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function AIPersonalizationPage() {
-  const [accounts, signals] = await Promise.all([getAccounts(), getSignals()]);
+  const ctx = await getSessionContext();
+  const [accounts, signals] = await Promise.all([
+    getAccounts(ctx.workspaceId),
+    getSignals(undefined, ctx.workspaceId),
+  ]);
   const latestSignal = signals[0];
 
   return (

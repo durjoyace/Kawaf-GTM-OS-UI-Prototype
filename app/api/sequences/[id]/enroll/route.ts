@@ -2,9 +2,10 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { sequenceEnrollments, sequences } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { json, error, WORKSPACE_ID } from "@/lib/api/utils";
+import { json, error, getSessionContext } from "@/lib/api/utils";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const ctx = await getSessionContext();
   const { id } = await params;
   const body = await req.json();
   const { contactIds } = body as { contactIds: string[] };
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const [seq] = await db
     .select()
     .from(sequences)
-    .where(and(eq(sequences.id, id), eq(sequences.workspaceId, WORKSPACE_ID)));
+    .where(and(eq(sequences.id, id), eq(sequences.workspaceId, ctx.workspaceId)));
 
   if (!seq) return error("Sequence not found", 404);
 

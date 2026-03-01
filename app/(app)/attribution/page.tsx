@@ -1,4 +1,5 @@
 import { getAttributionKpis, getAttributionChartData, getFunnelData } from "@/lib/data/api";
+import { getSessionContext } from "@/lib/api/utils";
 import { TopBar } from "@/components/top-bar";
 import { KpiCard } from "@/components/kpi-card";
 import { Button } from "@/components/ui/button";
@@ -8,10 +9,11 @@ import { AttributionClient } from "./client";
 export const dynamic = "force-dynamic";
 
 export default async function AttributionPage() {
+  const ctx = await getSessionContext();
   const [kpis, chartData, funnelData] = await Promise.all([
-    getAttributionKpis(),
-    getAttributionChartData(),
-    getFunnelData(),
+    getAttributionKpis(ctx.workspaceId),
+    getAttributionChartData(ctx.workspaceId),
+    getFunnelData(ctx.workspaceId),
   ]);
 
   return (

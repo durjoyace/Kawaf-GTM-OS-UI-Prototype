@@ -1,4 +1,5 @@
 import { getSequences, getOrchestrationKpis } from "@/lib/data/api";
+import { getSessionContext } from "@/lib/api/utils";
 import { TopBar } from "@/components/top-bar";
 import { KpiCard } from "@/components/kpi-card";
 import { SequenceCard } from "@/components/sequence-card";
@@ -7,7 +8,11 @@ import { Plus } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function OrchestrationPage() {
-  const [sequences, kpis] = await Promise.all([getSequences(), getOrchestrationKpis()]);
+  const ctx = await getSessionContext();
+  const [sequences, kpis] = await Promise.all([
+    getSequences(ctx.workspaceId),
+    getOrchestrationKpis(ctx.workspaceId),
+  ]);
 
   return (
     <>

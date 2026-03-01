@@ -18,10 +18,6 @@ import type {
   WorkflowNode, Integration, Notification, SignalFilter,
 } from "@/lib/types/models";
 
-// Default workspace for now (single-tenant demo)
-const WORKSPACE_ID = "ws-001";
-const DEMO_USER_ID = "demo-user-001";
-
 // ─── Helpers ───────────────────────────────────────────────────
 
 function timeAgo(date: Date | null): string {
@@ -50,16 +46,16 @@ function formatCurrency(n: number): string {
 
 // ─── Dashboard ─────────────────────────────────────────────────
 
-export async function getDashboardData(): Promise<DashboardData> {
+export async function getDashboardData(workspaceId = "ws-001"): Promise<DashboardData> {
   const [signalCount, accountCount, pipelineResult, closedResult, snapshots] = await Promise.all([
-    db.select({ count: count() }).from(signalsTable).where(eq(signalsTable.workspaceId, WORKSPACE_ID)),
-    db.select({ count: count() }).from(signalAccounts).where(eq(signalAccounts.workspaceId, WORKSPACE_ID)),
+    db.select({ count: count() }).from(signalsTable).where(eq(signalsTable.workspaceId, workspaceId)),
+    db.select({ count: count() }).from(signalAccounts).where(eq(signalAccounts.workspaceId, workspaceId)),
     db.select({ total: sum(deals.value) }).from(deals)
-      .where(sql`${deals.workspaceId} = ${WORKSPACE_ID} AND ${deals.stage} NOT IN ('closed-won', 'closed-lost')`),
+      .where(sql`${deals.workspaceId} = ${workspaceId} AND ${deals.stage} NOT IN ('closed-won', 'closed-lost')`),
     db.select({ total: sum(deals.value) }).from(deals)
-      .where(sql`${deals.workspaceId} = ${WORKSPACE_ID} AND ${deals.stage} = 'closed-won'`),
+      .where(sql`${deals.workspaceId} = ${workspaceId} AND ${deals.stage} = 'closed-won'`),
     db.select().from(kpiSnapshots)
-      .where(eq(kpiSnapshots.workspaceId, WORKSPACE_ID))
+      .where(eq(kpiSnapshots.workspaceId, workspaceId))
       .orderBy(asc(kpiSnapshots.period)),
   ]);
 
@@ -117,8 +113,8 @@ export async function getDashboardData(): Promise<DashboardData> {
 
 // ─── Signals ───────────────────────────────────────────────────
 
-export async function getSignals(filter?: SignalFilter): Promise<Signal[]> {
-  const conditions = [eq(signalsTable.workspaceId, WORKSPACE_ID)];
+export async function getSignals(filter?: SignalFilter, workspaceId = "ws-001"): Promise<Signal[]> {
+  const conditions = [eq(signalsTable.workspaceId, workspaceId)];
 
   if (filter?.category) {
     conditions.push(eq(signalsTable.category, filter.category));
@@ -188,14 +184,14 @@ export async function getSignals(filter?: SignalFilter): Promise<Signal[]> {
   return result;
 }
 
-export async function getSignalCategories(): Promise<SignalCategoryCount[]> {
+export async function getSignalCategories(workspaceId = "ws-001"): Promise<SignalCategoryCount[]> {
   const rows = await db
     .select({
       category: signalsTable.category,
       count: count(),
     })
     .from(signalsTable)
-    .where(eq(signalsTable.workspaceId, WORKSPACE_ID))
+    .where(eq(signalsTable.workspaceId, workspaceId))
     .groupBy(signalsTable.category);
 
   const categoryMeta: Record<string, { label: string; icon: string }> = {
@@ -216,7 +212,7 @@ export async function getSignalCategories(): Promise<SignalCategoryCount[]> {
 
 // ─── Sequences ─────────────────────────────────────────────────
 
-export async function getSequences(): Promise<Sequence[]> {
+export async function getSequences(workspaceId = "ws-001"): Promise<Sequence[]> {
   const rows = await db
     .select({
       id: sequencesTable.id,
@@ -232,7 +228,7 @@ export async function getSequences(): Promise<Sequence[]> {
     })
     .from(sequencesTable)
     .leftJoin(sequenceEnrollments, eq(sequencesTable.id, sequenceEnrollments.sequenceId))
-    .where(eq(sequencesTable.workspaceId, WORKSPACE_ID))
+    .where(eq(sequencesTable.workspaceId, workspaceId))
     .groupBy(sequencesTable.id);
 
   return rows.map((r) => ({
@@ -249,12 +245,12 @@ export async function getSequences(): Promise<Sequence[]> {
   }));
 }
 
-export async function getOrchestrationKpis(): Promise<KpiMetric[]> {
+export async function getOrchestrationKpis(workspaceId = "ws-001"): Promise<KpiMetric[]> {
   const [seqRows, enrollmentCount] = await Promise.all([
-    db.select().from(sequencesTable).where(eq(sequencesTable.workspaceId, WORKSPACE_ID)),
+    db.select().from(sequencesTable).where(eq(sequencesTable.workspaceId, workspaceId)),
     db.select({ count: count() }).from(sequenceEnrollments)
       .innerJoin(sequencesTable, eq(sequenceEnrollments.sequenceId, sequencesTable.id))
-      .where(eq(sequencesTable.workspaceId, WORKSPACE_ID)),
+      .where(eq(sequencesTable.workspaceId, workspaceId)),
   ]);
 
   const activeCount = seqRows.filter((s) => s.status === "active").length;
@@ -273,11 +269,11 @@ export async function getOrchestrationKpis(): Promise<KpiMetric[]> {
 
 // ─── Accounts ──────────────────────────────────────────────────
 
-export async function getAccounts(): Promise<Account[]> {
+export async function getAccounts(workspaceId = "ws-001"): Promise<Account[]> {
   const rows = await db
     .select()
     .from(signalAccounts)
-    .where(eq(signalAccounts.workspaceId, WORKSPACE_ID))
+    .where(eq(signalAccounts.workspaceId, workspaceId))
     .orderBy(desc(signalAccounts.score));
 
   return rows.map((r) => ({
@@ -291,14 +287,14 @@ export async function getAccounts(): Promise<Account[]> {
 
 // ─── Attribution ───────────────────────────────────────────────
 
-export async function getAttributionKpis(): Promise<KpiMetric[]> {
+export async function getAttributionKpis(workspaceId = "ws-001"): Promise<KpiMetric[]> {
   const [revenueResult, dealRows] = await Promise.all([
     db.select({ total: sum(attributionEvents.revenue) })
       .from(attributionEvents)
-      .where(eq(attributionEvents.workspaceId, WORKSPACE_ID)),
+      .where(eq(attributionEvents.workspaceId, workspaceId)),
     db.select()
       .from(deals)
-      .where(sql`${deals.workspaceId} = ${WORKSPACE_ID} AND ${deals.stage} = 'closed-won'`),
+      .where(sql`${deals.workspaceId} = ${workspaceId} AND ${deals.stage} = 'closed-won'`),
   ]);
 
   const totalRevenue = Number(revenueResult[0]?.total ?? 0);
@@ -315,11 +311,11 @@ export async function getAttributionKpis(): Promise<KpiMetric[]> {
   ];
 }
 
-export async function getAttributionChartData(): Promise<ChartDataPoint[]> {
+export async function getAttributionChartData(workspaceId = "ws-001"): Promise<ChartDataPoint[]> {
   const snapshots = await db
     .select()
     .from(kpiSnapshots)
-    .where(sql`${kpiSnapshots.workspaceId} = ${WORKSPACE_ID} AND ${kpiSnapshots.metric} IN ('signal_revenue', 'direct_revenue')`)
+    .where(sql`${kpiSnapshots.workspaceId} = ${workspaceId} AND ${kpiSnapshots.metric} IN ('signal_revenue', 'direct_revenue')`)
     .orderBy(asc(kpiSnapshots.period));
 
   const monthMap = new Map<string, { signal: number; direct: number }>();
@@ -336,13 +332,13 @@ export async function getAttributionChartData(): Promise<ChartDataPoint[]> {
   });
 }
 
-export async function getFunnelData(): Promise<AttributionEvent[]> {
+export async function getFunnelData(workspaceId = "ws-001"): Promise<AttributionEvent[]> {
   const [signalCount, accountCount, dealCount, wonDeals] = await Promise.all([
-    db.select({ count: count() }).from(signalsTable).where(eq(signalsTable.workspaceId, WORKSPACE_ID)),
-    db.select({ count: count() }).from(signalAccounts).where(eq(signalAccounts.workspaceId, WORKSPACE_ID)),
-    db.select({ count: count() }).from(deals).where(eq(deals.workspaceId, WORKSPACE_ID)),
+    db.select({ count: count() }).from(signalsTable).where(eq(signalsTable.workspaceId, workspaceId)),
+    db.select({ count: count() }).from(signalAccounts).where(eq(signalAccounts.workspaceId, workspaceId)),
+    db.select({ count: count() }).from(deals).where(eq(deals.workspaceId, workspaceId)),
     db.select({ count: count(), total: sum(deals.value) }).from(deals)
-      .where(sql`${deals.workspaceId} = ${WORKSPACE_ID} AND ${deals.stage} = 'closed-won'`),
+      .where(sql`${deals.workspaceId} = ${workspaceId} AND ${deals.stage} = 'closed-won'`),
   ]);
 
   const signals = signalCount[0].count;
@@ -368,11 +364,11 @@ export async function getWorkflowNodes(): Promise<WorkflowNode[]> {
 
 // ─── Integrations ──────────────────────────────────────────────
 
-export async function getIntegrations(): Promise<Integration[]> {
+export async function getIntegrations(workspaceId = "ws-001"): Promise<Integration[]> {
   const rows = await db
     .select()
     .from(integrationsTable)
-    .where(eq(integrationsTable.workspaceId, WORKSPACE_ID));
+    .where(eq(integrationsTable.workspaceId, workspaceId));
 
   return rows.map((r) => ({
     id: r.id,
@@ -389,12 +385,12 @@ export async function getIntegrations(): Promise<Integration[]> {
   }));
 }
 
-export async function getIntegrationKpis(): Promise<KpiMetric[]> {
+export async function getIntegrationKpis(workspaceId = "ws-001"): Promise<KpiMetric[]> {
   const [connectedResult, totalRecords] = await Promise.all([
     db.select({ count: count() }).from(integrationsTable)
-      .where(sql`${integrationsTable.workspaceId} = ${WORKSPACE_ID} AND ${integrationsTable.status} = 'connected'`),
+      .where(sql`${integrationsTable.workspaceId} = ${workspaceId} AND ${integrationsTable.status} = 'connected'`),
     db.select({ total: sum(integrationsTable.recordCount) }).from(integrationsTable)
-      .where(eq(integrationsTable.workspaceId, WORKSPACE_ID)),
+      .where(eq(integrationsTable.workspaceId, workspaceId)),
   ]);
 
   return [
@@ -407,11 +403,11 @@ export async function getIntegrationKpis(): Promise<KpiMetric[]> {
 
 // ─── Notifications ─────────────────────────────────────────────
 
-export async function getNotifications(): Promise<Notification[]> {
+export async function getNotifications(userId = "demo-user-001"): Promise<Notification[]> {
   const rows = await db
     .select()
     .from(notificationsTable)
-    .where(eq(notificationsTable.userId, DEMO_USER_ID))
+    .where(eq(notificationsTable.userId, userId))
     .orderBy(desc(notificationsTable.createdAt))
     .limit(20);
 
