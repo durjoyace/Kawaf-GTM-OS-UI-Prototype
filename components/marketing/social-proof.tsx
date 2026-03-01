@@ -1,22 +1,33 @@
+"use client";
+
+import { StaggerChildren, StaggerItem } from "./motion";
+
 const metrics = [
   { value: "50x", label: "Cheaper than agencies" },
   { value: "<5 min", label: "Time to first signal" },
-  { value: "10K+", label: "Signals processed" },
+  { value: "47%", label: "Conversion lift" },
   { value: "99.9%", label: "Uptime" },
 ];
 
 export function SocialProof() {
   return (
-    <section className="border-y bg-muted/30 py-12">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+    <section className="border-y border-[var(--mkt-border)] bg-[var(--mkt-bg-elevated)] py-16">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <StaggerChildren className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           {metrics.map((metric) => (
-            <div key={metric.label} className="text-center">
-              <div className="text-3xl font-bold text-green-500">{metric.value}</div>
-              <div className="mt-1 text-sm text-muted-foreground">{metric.label}</div>
-            </div>
+            <StaggerItem key={metric.label}>
+              <div className="text-center">
+                <div className="font-serif text-4xl text-[var(--mkt-text)] sm:text-5xl">
+                  {metric.value}
+                </div>
+                <div className="mx-auto mt-3 h-px w-8 bg-gradient-to-r from-transparent via-[var(--mkt-accent)] to-transparent" />
+                <div className="mt-3 font-mono text-xs uppercase tracking-wider text-[var(--mkt-text-muted)]">
+                  {metric.label}
+                </div>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerChildren>
       </div>
     </section>
   );

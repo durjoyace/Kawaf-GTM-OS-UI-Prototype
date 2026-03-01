@@ -13,12 +13,15 @@ export default function PricingPage() {
   return (
     <>
       <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--mkt-accent)]">
+              PRICING
+            </span>
+            <h1 className="mt-4 font-serif text-4xl tracking-tight sm:text-5xl">
               Simple, Transparent Pricing
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-[var(--mkt-text-secondary)]">
               Start free. Upgrade when you&apos;re ready. Cancel anytime.
             </p>
           </div>

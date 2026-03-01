@@ -1,40 +1,53 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { FadeIn } from "./motion";
+import { Section } from "./section";
 
 export function CtaSection() {
   return (
-    <section className="py-20 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 px-6 py-16 text-center text-white sm:px-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Stop Paying $15K/mo for GTM Intelligence
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-slate-300">
-            Get AI-powered signal detection, one-click outreach, and full
-            attribution — all for less than the cost of a single sales tool.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              className="bg-green-500 text-white hover:bg-green-600"
-              asChild
-            >
-              <Link href="/login">
-                Start Free Today <ArrowRight className="ml-1 h-4 w-4" />
+    <Section>
+      <FadeIn>
+        <div className="relative overflow-hidden rounded-2xl border border-[var(--mkt-border)] bg-[var(--mkt-bg-card)] px-6 py-16 text-center sm:px-12">
+          {/* Radial glow */}
+          <div className="pointer-events-none absolute inset-0 -z-0">
+            <div className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--mkt-accent)] opacity-[0.06] blur-[100px]" />
+          </div>
+
+          <div className="relative z-10">
+            <h2 className="font-serif text-3xl tracking-tight sm:text-4xl lg:text-5xl">
+              <span className="text-[var(--mkt-text)]">
+                Stop Paying $15K/mo for{" "}
+              </span>
+              <span className="bg-gradient-to-r from-[var(--mkt-gradient-start)] to-[var(--mkt-gradient-end)] bg-clip-text text-transparent">
+                GTM Intelligence
+              </span>
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--mkt-text-secondary)]">
+              Get AI-powered signal detection, one-click outreach, and full
+              attribution — all for less than the cost of a single sales tool.
+            </p>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--mkt-accent)] px-6 py-3 text-sm font-medium text-black transition-shadow hover:shadow-[0_0_24px_var(--mkt-accent-glow)]"
+              >
+                Start Free Today
+                <ArrowRight className="h-4 w-4" />
               </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-white/20 text-white hover:bg-white/10"
-              asChild
-            >
-              <Link href="/pricing">View Pricing</Link>
-            </Button>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center rounded-lg border border-[var(--mkt-border)] px-6 py-3 text-sm text-[var(--mkt-text-secondary)] transition-all hover:border-[var(--mkt-border-hover)] hover:text-[var(--mkt-text)]"
+              >
+                View Pricing
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </FadeIn>
+    </Section>
   );
 }

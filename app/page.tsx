@@ -3,8 +3,11 @@ import { auth } from "@/auth";
 import { MarketingHeader } from "@/components/marketing/marketing-header";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { HeroSection } from "@/components/marketing/hero-section";
-import { FeatureGrid } from "@/components/marketing/feature-grid";
 import { SocialProof } from "@/components/marketing/social-proof";
+import { HowItWorks } from "@/components/marketing/how-it-works";
+import { FeatureGrid } from "@/components/marketing/feature-grid";
+import { Testimonials } from "@/components/marketing/testimonials";
+import { TrustBadges } from "@/components/marketing/trust-badges";
 import { CtaSection } from "@/components/marketing/cta-section";
 
 export default async function Home() {
@@ -15,12 +18,15 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="marketing flex min-h-screen flex-col bg-[var(--mkt-bg)] text-[var(--mkt-text)]">
       <MarketingHeader />
       <main className="flex-1">
         <HeroSection />
         <SocialProof />
+        <HowItWorks />
         <FeatureGrid />
+        <Testimonials />
+        <TrustBadges />
         <CtaSection />
       </main>
       <MarketingFooter />

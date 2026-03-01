@@ -1,10 +1,15 @@
 import { Check, X } from "lucide-react";
 import { comparisonData, competitorInfo } from "@/lib/data/comparison";
+import { Fragment } from "react";
 
 function CellValue({ value }: { value: string | boolean }) {
-  if (value === true) return <Check className="h-4 w-4 text-green-500" />;
-  if (value === false) return <X className="h-4 w-4 text-red-400" />;
-  return <span className="text-sm">{value}</span>;
+  if (value === true)
+    return <Check className="h-4 w-4 text-[var(--mkt-accent)]" />;
+  if (value === false)
+    return <X className="h-4 w-4 text-red-400/60" />;
+  return (
+    <span className="text-sm text-[var(--mkt-text-secondary)]">{value}</span>
+  );
 }
 
 export function ComparisonTable() {
@@ -13,26 +18,41 @@ export function ComparisonTable() {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[600px] border-collapse text-left">
+        <colgroup>
+          <col className="w-[50%]" />
+          <col className="w-[25%]" />
+          <col className="w-[25%]" />
+        </colgroup>
         <thead>
-          <tr className="border-b">
-            <th className="py-3 pr-4 text-sm font-medium text-muted-foreground">Feature</th>
-            <th className="px-4 py-3 text-center">
-              <div className="text-sm font-semibold">Kawaf</div>
-              <div className="text-xs text-green-500">From $99/mo</div>
+          <tr className="border-b border-[var(--mkt-border)]">
+            <th className="py-3 pr-4 text-sm font-medium text-[var(--mkt-text-muted)]">
+              Feature
             </th>
             <th className="px-4 py-3 text-center">
-              <div className="text-sm font-semibold">{competitorInfo.name}</div>
-              <div className="text-xs text-muted-foreground">{competitorInfo.priceRange}</div>
+              <div className="text-sm font-semibold text-[var(--mkt-text)]">
+                Kawaf
+              </div>
+              <div className="text-xs text-[var(--mkt-accent)]">
+                From $99/mo
+              </div>
+            </th>
+            <th className="px-4 py-3 text-center">
+              <div className="text-sm font-semibold text-[var(--mkt-text)]">
+                {competitorInfo.name}
+              </div>
+              <div className="text-xs text-[var(--mkt-text-muted)]">
+                {competitorInfo.priceRange}
+              </div>
             </th>
           </tr>
         </thead>
         <tbody>
           {categories.map((category) => (
-            <tbody key={category}>
+            <Fragment key={category}>
               <tr>
                 <td
                   colSpan={3}
-                  className="pt-6 pb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+                  className="pb-2 pt-6 font-mono text-xs font-semibold uppercase tracking-widest text-[var(--mkt-text-muted)]"
                 >
                   {category}
                 </td>
@@ -40,8 +60,13 @@ export function ComparisonTable() {
               {comparisonData
                 .filter((r) => r.category === category)
                 .map((row) => (
-                  <tr key={row.feature} className="border-b border-border/50">
-                    <td className="py-3 pr-4 text-sm">{row.feature}</td>
+                  <tr
+                    key={row.feature}
+                    className="border-b border-[var(--mkt-border)]"
+                  >
+                    <td className="py-3 pr-4 text-sm text-[var(--mkt-text)]">
+                      {row.feature}
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <div className="flex items-center justify-center">
                         <CellValue value={row.kawaf} />
@@ -54,7 +79,7 @@ export function ComparisonTable() {
                     </td>
                   </tr>
                 ))}
-            </tbody>
+            </Fragment>
           ))}
         </tbody>
       </table>
