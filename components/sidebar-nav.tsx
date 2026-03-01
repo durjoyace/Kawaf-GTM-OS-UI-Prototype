@@ -16,6 +16,8 @@ import {
   ChevronLeft,
   ChevronDown,
   AlertTriangle,
+  Eye,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +29,8 @@ const mainNav = [
   { href: "/attribution", label: "Attribution", icon: BarChart3 },
   { href: "/workflow-builder", label: "Workflow Builder", icon: Workflow },
   { href: "/integrations", label: "Integrations", icon: Plug, warning: true },
+  { href: "/integrations/tracking-setup", label: "Tracking", icon: Eye },
+  { href: "/playbooks", label: "Playbooks", icon: BookOpen },
 ];
 
 const bottomNav = [

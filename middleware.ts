@@ -24,5 +24,8 @@ export const config = {
     "/integrations/:path*",
     "/workflow-builder/:path*",
     "/ai-personalization/:path*",
+    "/onboarding/:path*",
+    "/playbooks/:path*",
+    "/settings/:path*",
   ],
 };

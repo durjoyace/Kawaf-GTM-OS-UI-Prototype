@@ -77,6 +77,11 @@ export const workspaces = pgTable("workspaces", {
   ownerId: text("owner_id")
     .notNull()
     .references(() => users.id),
+  apiKey: text("api_key").unique(),
+  stripeCustomerId: text("stripe_customer_id").unique(),
+  onboardingComplete: boolean("onboarding_complete").default(false),
+  icpConfig: jsonb("icp_config").$type<Record<string, unknown>>(),
+  companyInfo: jsonb("company_info").$type<Record<string, unknown>>(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -280,6 +285,93 @@ export const kpiSnapshots = pgTable("kpi_snapshots", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+// ─── Playbooks ────────────────────────────────────────────────
+
+export const playbooks = pgTable("playbooks", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  templateId: text("template_id"),
+  name: text("name").notNull(),
+  industry: text("industry"),
+  signalRules: jsonb("signal_rules").$type<Record<string, unknown>>(),
+  sequenceConfig: jsonb("sequence_config").$type<Record<string, unknown>>(),
+  status: text("status").notNull().default("draft"), // active | draft
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Subscriptions ────────────────────────────────────────────
+
+export const subscriptions = pgTable("subscriptions", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  stripeSubscriptionId: text("stripe_subscription_id").unique(),
+  plan: text("plan").notNull().default("free"), // free | pro | team
+  status: text("status").notNull().default("active"), // active | canceled | past_due | trialing
+  currentPeriodStart: timestamp("current_period_start", { mode: "date" }),
+  currentPeriodEnd: timestamp("current_period_end", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Usage Records ────────────────────────────────────────────
+
+export const usageRecords = pgTable("usage_records", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  resource: text("resource").notNull(), // signals | emails | integrations
+  count: integer("count").notNull().default(0),
+  period: text("period").notNull(), // e.g. "2026-02"
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Tracking Events ──────────────────────────────────────────
+
+export const trackingEvents = pgTable("tracking_events", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  visitorId: text("visitor_id").notNull(),
+  pageUrl: text("page_url").notNull(),
+  pageTitle: text("page_title"),
+  referrer: text("referrer"),
+  duration: integer("duration"), // seconds
+  metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Outreach Emails ──────────────────────────────────────────
+
+export const outreachEmails = pgTable("outreach_emails", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  signalId: text("signal_id").references(() => signals.id),
+  accountId: text("account_id").references(() => signalAccounts.id),
+  toEmail: text("to_email").notNull(),
+  subject: text("subject").notNull(),
+  body: text("body").notNull(),
+  status: text("status").notNull().default("draft"), // draft | sent | delivered | bounced
+  sentAt: timestamp("sent_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 // ─── Relations ─────────────────────────────────────────────────
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -352,4 +444,26 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
 
 export const kpiSnapshotsRelations = relations(kpiSnapshots, ({ one }) => ({
   workspace: one(workspaces, { fields: [kpiSnapshots.workspaceId], references: [workspaces.id] }),
+}));
+
+export const playbooksRelations = relations(playbooks, ({ one }) => ({
+  workspace: one(workspaces, { fields: [playbooks.workspaceId], references: [workspaces.id] }),
+}));
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  workspace: one(workspaces, { fields: [subscriptions.workspaceId], references: [workspaces.id] }),
+}));
+
+export const usageRecordsRelations = relations(usageRecords, ({ one }) => ({
+  workspace: one(workspaces, { fields: [usageRecords.workspaceId], references: [workspaces.id] }),
+}));
+
+export const trackingEventsRelations = relations(trackingEvents, ({ one }) => ({
+  workspace: one(workspaces, { fields: [trackingEvents.workspaceId], references: [workspaces.id] }),
+}));
+
+export const outreachEmailsRelations = relations(outreachEmails, ({ one }) => ({
+  workspace: one(workspaces, { fields: [outreachEmails.workspaceId], references: [workspaces.id] }),
+  signal: one(signals, { fields: [outreachEmails.signalId], references: [signals.id] }),
+  account: one(signalAccounts, { fields: [outreachEmails.accountId], references: [signalAccounts.id] }),
 }));
