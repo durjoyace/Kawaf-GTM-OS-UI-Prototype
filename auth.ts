@@ -67,9 +67,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
-  session: {
-    strategy: process.env.TEST_USER_EMAIL ? "jwt" : "database",
-  },
+  session: { strategy: "jwt" },
   providers,
   pages: {
     signIn: "/login",
@@ -82,10 +80,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    session({ session, user, token }) {
-      if (session.user) {
-        // JWT mode (credentials) uses token, DB mode uses user
-        session.user.id = (user?.id ?? token?.id) as string;
+    session({ session, token }) {
+      if (session.user && token?.id) {
+        session.user.id = token.id as string;
       }
       return session;
     },
