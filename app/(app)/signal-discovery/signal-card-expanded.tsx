@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Lightbulb, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronUp, Lightbulb, ArrowRight, Building2, Users, MapPin, Cpu } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,15 @@ import { StatusChip } from "@/components/status-chip";
 import { SignalActionDialog } from "@/components/signal-action-dialog";
 import type { Signal } from "@/lib/types/models";
 
-export function SignalCardExpanded({ signal }: { signal: Signal }) {
+interface EnrichmentData {
+  employees?: number | null;
+  revenue?: string | null;
+  techStack?: string[] | null;
+  headquarters?: string | null;
+  fundingStage?: string | null;
+}
+
+export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enrichment?: EnrichmentData }) {
   const [expanded, setExpanded] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
 
@@ -38,6 +46,32 @@ export function SignalCardExpanded({ signal }: { signal: Signal }) {
             </div>
             <span className="text-[10px] text-muted-foreground whitespace-nowrap">{signal.recency}</span>
           </div>
+
+          {/* Enrichment data */}
+          {enrichment && (enrichment.employees || enrichment.revenue || enrichment.headquarters || enrichment.techStack) && (
+            <div className="mt-3 flex flex-wrap gap-3 text-[10px] text-muted-foreground">
+              {enrichment.employees && (
+                <span className="flex items-center gap-1">
+                  <Users className="h-3 w-3" /> {enrichment.employees.toLocaleString()} employees
+                </span>
+              )}
+              {enrichment.revenue && (
+                <span className="flex items-center gap-1">
+                  <Building2 className="h-3 w-3" /> {enrichment.revenue}
+                </span>
+              )}
+              {enrichment.headquarters && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> {enrichment.headquarters}
+                </span>
+              )}
+              {enrichment.techStack && enrichment.techStack.length > 0 && (
+                <span className="flex items-center gap-1">
+                  <Cpu className="h-3 w-3" /> {enrichment.techStack.slice(0, 3).join(", ")}
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Expandable section */}
           {(signal.explanation || signal.suggestedAction) && (

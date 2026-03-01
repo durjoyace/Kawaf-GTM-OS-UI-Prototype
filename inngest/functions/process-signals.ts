@@ -1,6 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
 import { signals, signalAccounts, notifications, workspaces, workspaceMembers } from "@/lib/db/schema";
+
 import { eq } from "drizzle-orm";
 import { scoreSignal, scoreSignalFallback } from "@/lib/ai/score-signal";
 import type { SignalContext, AccountContext } from "@/lib/ai/types";
@@ -93,6 +94,19 @@ export const processSignals = inngest.createFunction(
             .where(eq(signals.id, signal.id));
 
           return result;
+        });
+
+        // Emit signal/scored event for playbook matching
+        await step.run(`emit-scored-${signal.id}`, async () => {
+          await inngest.send({
+            name: "signal/scored",
+            data: {
+              signalId: signal.id,
+              workspaceId: workspaceId,
+              confidence: scored.confidence,
+              confidenceLevel: scored.confidenceLevel,
+            },
+          });
         });
 
         // Create notification for high-confidence signals

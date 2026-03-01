@@ -8,6 +8,7 @@ import {
   jsonb,
   primaryKey,
   uniqueIndex,
+  unique,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import type { AdapterAccountType } from "next-auth/adapters";
@@ -113,6 +114,14 @@ export const signalAccounts = pgTable("signal_accounts", {
   industry: text("industry"),
   score: integer("score").default(0),
   metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+  employees: integer("employees"),
+  revenue: text("revenue"),
+  techStack: jsonb("tech_stack").$type<string[]>(),
+  linkedinUrl: text("linkedin_url"),
+  fundingStage: text("funding_stage"),
+  headquarters: text("headquarters"),
+  enrichedAt: timestamp("enriched_at", { mode: "date" }),
+  enrichmentSource: text("enrichment_source"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -368,7 +377,80 @@ export const outreachEmails = pgTable("outreach_emails", {
   subject: text("subject").notNull(),
   body: text("body").notNull(),
   status: text("status").notNull().default("draft"), // draft | sent | delivered | bounced
+  trackingId: text("tracking_id").unique(),
+  opens: integer("opens").default(0),
+  clicks: integer("clicks").default(0),
   sentAt: timestamp("sent_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Email Engagements ───────────────────────────────────────
+
+export const emailEngagements = pgTable("email_engagements", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  outreachEmailId: text("outreach_email_id")
+    .notNull()
+    .references(() => outreachEmails.id, { onDelete: "cascade" }),
+  type: text("type").notNull(), // open | click | reply | bounce
+  linkUrl: text("link_url"),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Signal Sources (Custom Signal Builder) ──────────────────
+
+export const signalSources = pgTable("signal_sources", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // webhook | rss | api_poll | github | g2
+  config: jsonb("config").$type<Record<string, unknown>>(), // url, headers, jsonPath, pollInterval
+  conditionRules: jsonb("condition_rules").$type<Record<string, unknown>[]>(),
+  status: text("status").notNull().default("active"), // active | paused
+  lastPolledAt: timestamp("last_polled_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Reports ─────────────────────────────────────────────────
+
+export const reports = pgTable("reports", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  widgets: jsonb("widgets").$type<Record<string, unknown>[]>(),
+  dateRange: jsonb("date_range").$type<Record<string, unknown>>(),
+  shareToken: text("share_token").unique(),
+  isPublic: boolean("is_public").default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── Meetings ────────────────────────────────────────────────
+
+export const meetings = pgTable("meetings", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  accountId: text("account_id").references(() => signalAccounts.id),
+  title: text("title").notNull(),
+  scheduledAt: timestamp("scheduled_at", { mode: "date" }).notNull(),
+  attendees: jsonb("attendees").$type<Record<string, unknown>[]>(),
+  brief: jsonb("brief").$type<Record<string, unknown>>(),
+  notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -462,8 +544,26 @@ export const trackingEventsRelations = relations(trackingEvents, ({ one }) => ({
   workspace: one(workspaces, { fields: [trackingEvents.workspaceId], references: [workspaces.id] }),
 }));
 
-export const outreachEmailsRelations = relations(outreachEmails, ({ one }) => ({
+export const outreachEmailsRelations = relations(outreachEmails, ({ one, many }) => ({
   workspace: one(workspaces, { fields: [outreachEmails.workspaceId], references: [workspaces.id] }),
   signal: one(signals, { fields: [outreachEmails.signalId], references: [signals.id] }),
   account: one(signalAccounts, { fields: [outreachEmails.accountId], references: [signalAccounts.id] }),
+  engagements: many(emailEngagements),
+}));
+
+export const emailEngagementsRelations = relations(emailEngagements, ({ one }) => ({
+  outreachEmail: one(outreachEmails, { fields: [emailEngagements.outreachEmailId], references: [outreachEmails.id] }),
+}));
+
+export const signalSourcesRelations = relations(signalSources, ({ one }) => ({
+  workspace: one(workspaces, { fields: [signalSources.workspaceId], references: [workspaces.id] }),
+}));
+
+export const reportsRelations = relations(reports, ({ one }) => ({
+  workspace: one(workspaces, { fields: [reports.workspaceId], references: [workspaces.id] }),
+}));
+
+export const meetingsRelations = relations(meetings, ({ one }) => ({
+  workspace: one(workspaces, { fields: [meetings.workspaceId], references: [workspaces.id] }),
+  account: one(signalAccounts, { fields: [meetings.accountId], references: [signalAccounts.id] }),
 }));

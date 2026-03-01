@@ -18,6 +18,8 @@ import {
   AlertTriangle,
   Eye,
   BookOpen,
+  Wand2,
+  FileBarChart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +33,8 @@ const mainNav = [
   { href: "/integrations", label: "Integrations", icon: Plug, warning: true },
   { href: "/integrations/tracking-setup", label: "Tracking", icon: Eye },
   { href: "/playbooks", label: "Playbooks", icon: BookOpen },
+  { href: "/signal-builder", label: "Signal Builder", icon: Wand2 },
+  { href: "/reports", label: "Reports", icon: FileBarChart },
 ];
 
 const bottomNav = [

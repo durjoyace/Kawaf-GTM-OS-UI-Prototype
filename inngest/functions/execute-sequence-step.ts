@@ -1,8 +1,8 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
-import { sequenceEnrollments, sequences } from "@/lib/db/schema";
+import { sequenceEnrollments, sequences, signalAccounts } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { sendEmail } from "@/lib/email/resend";
+import { executeStep } from "@/lib/channels/channel-router";
 
 export const executeSequenceStep = inngest.createFunction(
   { id: "execute-sequence-step", name: "Execute Sequence Step" },
@@ -32,11 +32,10 @@ export const executeSequenceStep = inngest.createFunction(
 
     if (!sequence) return { error: "Sequence not found" };
 
-    const steps = (sequence.steps as Array<{ type: string; subject?: string; delay?: number }>) ?? [];
+    const steps = (sequence.steps as Array<{ type: string; subject?: string; body?: string; delay?: number }>) ?? [];
     const currentStep = enrollment.currentStep ?? 0;
 
     if (currentStep >= steps.length) {
-      // Sequence complete
       await step.run("complete-enrollment", async () => {
         await db
           .update(sequenceEnrollments)
@@ -48,20 +47,25 @@ export const executeSequenceStep = inngest.createFunction(
 
     const stepConfig = steps[currentStep];
 
-    await step.run(`execute-step-${currentStep}`, async () => {
-      if (stepConfig.type === "email" && stepConfig.subject) {
-        const contactEmail = enrollment.contactId; // contactId stores email
-        await sendEmail({
-          to: contactEmail,
-          subject: stepConfig.subject,
-          html: `<p>${stepConfig.subject}</p>`,
-        });
-        return { type: "email", sent: true, to: contactEmail };
-      }
+    // Resolve contact info for channel routing
+    const contact = await step.run("resolve-contact", async () => {
+      const contactId = enrollment.contactId;
+      // Try to resolve from signal accounts
+      const [account] = await db
+        .select()
+        .from(signalAccounts)
+        .where(eq(signalAccounts.id, contactId))
+        .limit(1);
 
-      // Non-email steps (LinkedIn, call, etc.) — log for now
-      console.log(`Executing ${stepConfig.type} step: ${stepConfig.subject ?? "action"}`);
-      return { type: stepConfig.type, executed: true };
+      return {
+        email: account ? (account.metadata as Record<string, string>)?.email ?? contactId : contactId,
+        linkedinUrl: account?.linkedinUrl ?? undefined,
+        phone: account ? (account.metadata as Record<string, string>)?.phone : undefined,
+      };
+    });
+
+    const result = await step.run(`execute-step-${currentStep}`, async () => {
+      return executeStep(stepConfig, contact);
     });
 
     // Advance to next step
@@ -78,6 +82,6 @@ export const executeSequenceStep = inngest.createFunction(
       await step.sleep("wait-for-next-step", `${nextStep.delay}d`);
     }
 
-    return { enrollmentId, stepExecuted: currentStep, nextStep: currentStep + 1 };
+    return { enrollmentId, stepExecuted: currentStep, result, nextStep: currentStep + 1 };
   }
 );

@@ -27,5 +27,7 @@ export const config = {
     "/onboarding/:path*",
     "/playbooks/:path*",
     "/settings/:path*",
+    "/signal-builder/:path*",
+    "/reports/:path*",
   ],
 };

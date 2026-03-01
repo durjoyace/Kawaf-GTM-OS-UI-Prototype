@@ -4,6 +4,7 @@ import { outreachEmails } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSessionContext, json, error } from "@/lib/api/utils";
 import { sendEmail } from "@/lib/email/resend";
+import { wrapEmailWithTracking } from "@/lib/email/tracking";
 
 export async function POST(
   req: NextRequest,
@@ -34,14 +35,20 @@ export async function POST(
     return error("Outreach email not found", 404);
   }
 
+  // Generate tracking ID and wrap HTML with tracking
+  const trackingId = crypto.randomUUID();
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.kawaf.io";
+  const rawHtml = `<div style="font-family: sans-serif; line-height: 1.6;">${emailBody.replace(/\n/g, "<br>")}</div>`;
+  const trackedHtml = wrapEmailWithTracking(rawHtml, trackingId, baseUrl);
+
   // Send via Resend
   const result = await sendEmail({
     to: toEmail,
     subject,
-    html: `<div style="font-family: sans-serif; line-height: 1.6;">${emailBody.replace(/\n/g, "<br>")}</div>`,
+    html: trackedHtml,
   });
 
-  // Update DB record
+  // Update DB record with tracking ID
   await db
     .update(outreachEmails)
     .set({
@@ -49,6 +56,7 @@ export async function POST(
       subject,
       body: emailBody,
       status: "sent",
+      trackingId,
       sentAt: new Date(),
     })
     .where(eq(outreachEmails.id, emailId));

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ChannelBadge } from "@/components/channel-badge";
@@ -6,7 +7,8 @@ import type { Sequence } from "@/lib/types/models";
 
 export function SequenceCard({ sequence }: { sequence: Sequence }) {
   return (
-    <Card className="p-5 hover:shadow-md transition-shadow">
+    <Link href={`/orchestration/${sequence.id}`}>
+    <Card className="p-5 hover:shadow-md transition-shadow cursor-pointer">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="font-semibold text-sm">{sequence.name}</h3>
@@ -48,5 +50,6 @@ export function SequenceCard({ sequence }: { sequence: Sequence }) {
         <Progress value={sequence.progress} className="h-1.5" />
       </div>
     </Card>
+    </Link>
   );
 }
