@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Lightbulb, ArrowRight, Building2, Users, MapPin, Cpu } from "lucide-react";
+import { ChevronDown, ChevronUp, Lightbulb, ArrowRight, Building2, Users, MapPin, Cpu, Linkedin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConfidenceBar } from "@/components/confidence-bar";
 import { StatusChip } from "@/components/status-chip";
 import { SignalActionDialog } from "@/components/signal-action-dialog";
+import { LinkedInPostDialog } from "@/components/linkedin-post-dialog";
 import type { Signal } from "@/lib/types/models";
 
 interface EnrichmentData {
@@ -21,6 +22,7 @@ interface EnrichmentData {
 export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enrichment?: EnrichmentData }) {
   const [expanded, setExpanded] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
+  const [linkedinOpen, setLinkedinOpen] = useState(false);
 
   return (
     <Card className="p-5 hover:shadow-md transition-all">
@@ -96,18 +98,34 @@ export function SignalCardExpanded({ signal, enrichment }: { signal: Signal; enr
                     <div className="rounded-lg bg-green-50/50 border border-green-100 p-3">
                       <p className="text-[10px] font-semibold text-green-800 mb-1">Suggested Action</p>
                       <p className="text-[10px] text-green-700/80 leading-relaxed">{signal.suggestedAction}</p>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="mt-2 h-6 text-[10px] gap-1 border-green-200 text-green-700 hover:bg-green-50"
-                        onClick={() => setActionOpen(true)}
-                      >
-                        Take Action <ArrowRight className="h-2.5 w-2.5" />
-                      </Button>
+                      <div className="flex gap-2 mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-6 text-[10px] gap-1 border-green-200 text-green-700 hover:bg-green-50"
+                          onClick={() => setActionOpen(true)}
+                        >
+                          Take Action <ArrowRight className="h-2.5 w-2.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-6 text-[10px] gap-1 border-blue-200 text-blue-700 hover:bg-blue-50"
+                          onClick={() => setLinkedinOpen(true)}
+                        >
+                          <Linkedin className="h-2.5 w-2.5" />
+                          Draft LinkedIn Post
+                        </Button>
+                      </div>
                       <SignalActionDialog
                         signalId={signal.id}
                         open={actionOpen}
                         onOpenChange={setActionOpen}
+                      />
+                      <LinkedInPostDialog
+                        signalId={signal.id}
+                        open={linkedinOpen}
+                        onOpenChange={setLinkedinOpen}
                       />
                     </div>
                   )}

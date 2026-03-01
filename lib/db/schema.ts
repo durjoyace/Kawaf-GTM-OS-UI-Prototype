@@ -182,6 +182,7 @@ export const sequenceEnrollments = pgTable("sequence_enrollments", {
   contactId: text("contact_id").notNull(),
   currentStep: integer("current_step").default(0),
   status: text("status").notNull().default("active"), // active | completed | paused | bounced
+  variantAssignments: jsonb("variant_assignments").$type<Record<string, string>>(),
   enrolledAt: timestamp("enrolled_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -378,6 +379,7 @@ export const outreachEmails = pgTable("outreach_emails", {
   body: text("body").notNull(),
   status: text("status").notNull().default("draft"), // draft | sent | delivered | bounced
   trackingId: text("tracking_id").unique(),
+  variantId: text("variant_id"),
   opens: integer("opens").default(0),
   clicks: integer("clicks").default(0),
   sentAt: timestamp("sent_at", { mode: "date" }),
@@ -394,6 +396,7 @@ export const emailEngagements = pgTable("email_engagements", {
     .notNull()
     .references(() => outreachEmails.id, { onDelete: "cascade" }),
   type: text("type").notNull(), // open | click | reply | bounce
+  variantId: text("variant_id"),
   linkUrl: text("link_url"),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
@@ -451,6 +454,27 @@ export const meetings = pgTable("meetings", {
   attendees: jsonb("attendees").$type<Record<string, unknown>[]>(),
   brief: jsonb("brief").$type<Record<string, unknown>>(),
   notes: text("notes"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// ─── LinkedIn Posts ──────────────────────────────────────────
+
+export const linkedinPosts = pgTable("linkedin_posts", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  signalId: text("signal_id")
+    .notNull()
+    .references(() => signals.id),
+  accountId: text("account_id").references(() => signalAccounts.id),
+  headline: text("headline").notNull(),
+  content: text("content").notNull(),
+  hashtags: jsonb("hashtags").$type<string[]>().default([]),
+  status: text("status").notNull().default("draft"), // draft | posted
+  postedAt: timestamp("posted_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
@@ -566,4 +590,10 @@ export const reportsRelations = relations(reports, ({ one }) => ({
 export const meetingsRelations = relations(meetings, ({ one }) => ({
   workspace: one(workspaces, { fields: [meetings.workspaceId], references: [workspaces.id] }),
   account: one(signalAccounts, { fields: [meetings.accountId], references: [signalAccounts.id] }),
+}));
+
+export const linkedinPostsRelations = relations(linkedinPosts, ({ one }) => ({
+  workspace: one(workspaces, { fields: [linkedinPosts.workspaceId], references: [workspaces.id] }),
+  signal: one(signals, { fields: [linkedinPosts.signalId], references: [signals.id] }),
+  account: one(signalAccounts, { fields: [linkedinPosts.accountId], references: [signalAccounts.id] }),
 }));

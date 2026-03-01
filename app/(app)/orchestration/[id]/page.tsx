@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { TopBar } from "@/components/top-bar";
 import { SequenceAnalytics } from "@/components/sequence-analytics";
+import { AbTestResults } from "@/components/ab-test-results";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -58,15 +59,18 @@ export default function SequenceDetailPage() {
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-500" />
           </div>
         ) : data ? (
-          <SequenceAnalytics
-            totalEnrolled={data.totalEnrolled}
-            active={data.active}
-            completed={data.completed}
-            openRate={data.openRate}
-            replyRate={data.replyRate}
-            meetingsBooked={data.meetingsBooked}
-            stepMetrics={data.stepMetrics}
-          />
+          <>
+            <SequenceAnalytics
+              totalEnrolled={data.totalEnrolled}
+              active={data.active}
+              completed={data.completed}
+              openRate={data.openRate}
+              replyRate={data.replyRate}
+              meetingsBooked={data.meetingsBooked}
+              stepMetrics={data.stepMetrics}
+            />
+            <AbTestResults sequenceId={data.sequenceId} />
+          </>
         ) : (
           <p className="text-sm text-muted-foreground">Sequence not found.</p>
         )}

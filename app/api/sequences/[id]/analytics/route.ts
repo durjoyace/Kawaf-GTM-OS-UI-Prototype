@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { getSessionContext, json, error } from "@/lib/api/utils";
 import { db } from "@/lib/db";
-import { sequences, sequenceEnrollments, outreachEmails, emailEngagements } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { sequences, sequenceEnrollments } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
+import { calculateAbResults } from "@/lib/ab-testing/stats";
 
 export async function GET(
   _req: NextRequest,
@@ -31,17 +32,33 @@ export async function GET(
   const completed = enrollments.filter((e) => e.status === "completed").length;
 
   // Build step-by-step metrics
-  const steps = (sequence.steps as Array<{ type: string; subject?: string }>) ?? [];
-  const stepMetrics = steps.map((step, index) => {
-    const atOrPast = enrollments.filter((e) => (e.currentStep ?? 0) > index).length;
-    return {
-      step: index + 1,
-      type: step.type,
-      subject: step.subject ?? `Step ${index + 1}`,
-      reached: atOrPast,
-      completionRate: totalEnrolled > 0 ? Math.round((atOrPast / totalEnrolled) * 100) : 0,
-    };
-  });
+  const steps = (sequence.steps as Array<{
+    type: string;
+    subject?: string;
+    abTest?: boolean;
+    variants?: Array<{ id: string; name: string; subject?: string; body?: string }>;
+  }>) ?? [];
+
+  const stepMetrics = await Promise.all(
+    steps.map(async (step, index) => {
+      const atOrPast = enrollments.filter((e) => (e.currentStep ?? 0) > index).length;
+      const metric: Record<string, unknown> = {
+        step: index + 1,
+        type: step.type,
+        subject: step.subject ?? `Step ${index + 1}`,
+        reached: atOrPast,
+        completionRate: totalEnrolled > 0 ? Math.round((atOrPast / totalEnrolled) * 100) : 0,
+        abTest: step.abTest ?? false,
+      };
+
+      if (step.abTest && step.variants && step.variants.length > 0) {
+        const variantDefs = step.variants.map((v) => ({ id: v.id, name: v.name }));
+        metric.abResults = await calculateAbResults(id, index, variantDefs);
+      }
+
+      return metric;
+    })
+  );
 
   return json({
     sequenceId: id,
